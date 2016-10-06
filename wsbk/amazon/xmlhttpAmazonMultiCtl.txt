@@ -1,0 +1,116 @@
+........................................................................
+........................................................................
+........................................................................
+........................................................................
+<html><head><title>xmlhttpAmazonMultiCtl.html</title>
+</head><body>
+<script src="../utils/xmlhttp.js"></script>
+<script src="../utils/key.js"></script>
+<script src="../utils/AmazonEnvelopes.js"></script>
+<script >
+var token=amazonToken;
+</script>
+</head><body>
+<form action="javascript:void">
+Amazon SOAPcalls; see 
+<a target="_top"
+ href="http://associates.amazon.com/exec/panama/associates/join/developer/faq.html">FAQ</a>;
+<a target="_top"
+ href="http://associates.amazon.com/exec/panama/associates/join/developer/kit.html">download</a>
+and read the Web Services API and Integration Guide.
+<table><tr><td>
+Mode:<select name="mode" size="1">
+<option value="apparel">Apparel</option>
+<option value="baby">Baby</option>
+<option selected="1" value="books">Books</option>
+<option value="classical">Classical Music</option>
+<option value="dvd">DVD</option>
+<option value="electronics">Electronics</option>
+<option value="garden">Outdoor Living</option>
+<option value="kitchen">Kitchen &amp; Housewares</option>
+<option value="magazines">Magazines</option>
+<option value="music">Popular Music</option>
+<option value="pc-hardware">Computers</option>
+<option value="photo">Camera &amp; Photo</option>
+<option value="software">Software</option>
+<option value="toys">Toys &amp; Games</option>
+<option value="universal">Tools &amp; Hardware</option>
+<option value="vhs">Video</option>
+<option value="videogames">Computer &amp; Video Games</option>
+</select>
+</td><td>
+<table border="1">
+<tr><td>
+<input type="button" value="Actor"
+onclick="with(this.form){doAmazonActorSearch(token,actor.value,mode.value)}"/>
+</td><td><input type="text" name="actor" value="Bogart"/></td></tr>
+<tr><td>
+<input type="button" value="Asin"
+onclick="with(this.form){doAmazonAsinSearch(token,asin.value,mode.value)}"/>
+</td><td><input type="text" name="asin" value="1590590031"/></td></tr>
+<tr><td>
+
+<input type="button" value="Author"
+onclick="with(this.form){doAmazonAuthorSearch(token,author.value,mode.value)}"/>
+</td><td><input type="text" name="author" value="nakhimovsky"/></td></tr>
+<tr><td>
+
+<input type="button" value="BrowseNode"
+onclick="with(this.form){doAmazonBrowseNodeSearch(token,browsenode.value,mode.value)}"/>
+</td><td><input type="text" name="browsenode" value="1000"/></td></tr>
+<tr><td>
+
+<input type="button" value="Director"
+onclick="with(this.form){doAmazonDirectorSearch(token,director.value,mode.value)}"/>
+</td><td><input type="text" name="director" value="spielberg"/></td></tr>
+<tr><td>
+
+<input type="button" value="Exchange"
+onclick="with(this.form){doAmazonExchangeSearch(token,exchangeId.value)}"/>
+</td><td><input type="text" name="exchangeId" value="Y01Y2741473Y6491313"/></td></tr>
+<tr><td>
+
+<input type="button" value="Keyword"
+onclick="with(this.form){doAmazonKeywordSearch(token,keyword.value,mode.value)}"/>
+</td><td><input type="text" name="keyword" value="korea"/></td></tr>
+
+</table></td><td><table border="1">
+<tr><td>
+<input type="button" value="ListMania"
+onclick="with(this.form){doAmazonListManiaSearch(token,lmId.value,mode.value)}"/>
+</td><td><input type="text" name="lmId" value="34TRCFE5HC23"/></td></tr>
+<tr><td>
+<input type="button" value="Manufacturer"
+onclick="with(this.form){doAmazonManufacturerSearch(token,manufacturer.value,mode.value)}"/>
+</td><td><input type="text" name="manufacturer" value="palm"/></td></tr>
+<tr><td>
+<input type="button" value="Power"
+onclick="with(this.form){doAmazonPowerSearch(token,power.value,mode.value)}"/>
+</td><td><input type="text" size="40" name="power" value="pubdate:2002 and author:Knuth"/></td></tr>
+<tr><td>
+<input type="button" value="SellerProfile"
+onclick="with(this.form){doAmazonSellerProfileSearch(token,sellerId.value)}"/>
+
+</td><td><input type="text" name="sellerId" value="ARZ6W4AEZ5FQH"/></td></tr>
+<tr><td>
+<input type="button" value="Seller"
+onclick="with(this.form){doAmazonSellerSearch(token,sellerId2.value)}"/>
+
+</td><td><input type="text" name="sellerId2" value="ARZ6W4AEZ5FQH"/></td></tr>
+<tr><td>
+<input type="button" value="Similarity"
+onclick="with(this.form){doAmazonSimilaritySearch(token,asin2.value,assocTag.value,mode.value)}"/>
+
+</td><td><input type="text" name="asin2" value="B000067RPH"/>
+<input type="text" name="assocTag" value="your-associate-tag"/></td></tr>
+<tr><td>
+<input type="button" value="Upc"
+onclick="with(this.form){doAmazonUpcSearch(token,upc.value,mode.value)}"/>
+</td><td><input type="text" name="upc" value="044001774720"/></td></tr>
+</table></td></tr>
+</table>
+</form>
+</body>
+</html>
+
+

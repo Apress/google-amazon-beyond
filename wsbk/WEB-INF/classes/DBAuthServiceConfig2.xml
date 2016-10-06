@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.4.1_02" class="java.beans.XMLDecoder"> 
+ <object class="soapUtil.DBAuthService"> 
+   <void method="setDbURL">
+     <string>jdbc:mysql://localhost:3306/wsbkdb</string>
+   </void>
+   <void method="setDbDriver">
+     <string>com.mysql.jdbc.Driver</string>
+   </void>
+   <void method="setDbUser">
+     <string>tjm</string>
+   </void>
+   <void method="setDbPwd">
+     <string>tjm</string>
+   </void>
+   <void method="setPortNumber">
+     <int>65431</int>
+   </void>
+   <void method="addAuthorization">
+     <string>tjm</string>
+     <string>tjm</string>
+     <string>admin</string>
+   </void>
+   <void method="addAuthorization">
+     <string>adn</string>
+     <string>adn</string>
+     <string>admin</string>
+   </void>
+   <void method="addAuthorization">
+     <string>joe</string>
+     <string>joe#3_Pwd</string>
+     <string>member</string>
+   </void>
+   <void method="setQueryStrings">
+     <object class="java.util.ArrayList">
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>admin</string></void>
+               <void method="setQID"><string>crProdRevs</string></void>
+               <void method="setQStr">
+ <string>CREATE TABLE ProdRevs (AsinUserID VARCHAR(64) PRIMARY KEY, Asin VARCHAR(10), UserID TEXT,dtime DATETIME,Rating INT,Keywords TEXT,Review TEXT)</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>member</string></void>
+               <void method="setQID"><string>Ins_ProdRevs</string></void>
+               <void method="setQStr">
+ <string>INSERT INTO ProdRevs (AsinUserID,Asin,UserID,dtime,Rating,Keywords,Review) VALUES (?,?,?,?,?,?,?)</string></void>
+               <void method="setQTypes"><string>TEXT=$1+:+userID,VARCHAR(10),TEXT=userID,DATETIME=Now,INT,TEXT,TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>member</string></void>
+               <void method="setQID"><string>DELETE_ProdRevs</string></void>
+               <void method="setQStr">
+                 <string>DELETE FROM ProdRevs WHERE AsinUserID=?</string>
+               </void>
+               <void method="setQTypes"><string>TEXT=$1+:+userID</string></void>
+            </object>
+        </void>
+
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQID"><string>GET_ProdRevs</string></void>
+               <void method="setQStr">
+                 <string>SELECT * FROM ProdRevs WHERE Asin=?</string></void>
+               <void method="setQTypes"><string>VARCHAR(10)</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQID"><string>GETALL_ProdRevs</string></void>
+               <void method="setQStr"><string>SELECT * FROM ProdRevs</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>admin</string></void>
+               <void method="setQID"><string>crAmaBks</string></void>
+               <void method="setQStr">
+ <string>CREATE TABLE AmaBks (Asin VARCHAR(10) NOT NULL PRIMARY KEY,ProductName TEXT,ReleaseDate TEXT,Manufacturer TEXT,OurPrice TEXT,URL TEXT)</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>admin</string></void>
+               <void method="setQID"><string>crAmaAuth</string></void>
+               <void method="setQStr">
+                   <string>CREATE TABLE AmaAuth (Asin VARCHAR(10) NOT NULL, Author VARCHAR(64) NOT NULL,PRIMARY KEY (Asin,Author))</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>member</string></void>
+               <void method="setQID"><string>INS_AmaAuth</string></void>
+               <void method="setQStr">
+                   <string>INSERT INTO AmaAuth (Asin,Author) VALUES (?,?)</string></void>
+               <void method="setQTypes"><string>VARCHAR(10),TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>member</string></void>
+               <void method="setQID"><string>INS_AmaBks</string></void>
+               <void method="setQStr">
+<string>INSERT INTO AmaBks (Asin,ProductName,ReleaseDate,Manufacturer,OurPrice,Url) VALUES (?,?,?,?,?,?)</string></void>
+               <void method="setQTypes"><string>VARCHAR(10),TEXT,TEXT,TEXT,TEXT,TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQID"><string>GET_AmaBks</string></void>
+               <void method="setQStr"><string>SELECT * FROM AmaBks WHERE Asin=?</string></void>
+               <void method="setQTypes"><string>TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQID"><string>GETALL_AmaBks</string></void>
+               <void method="setQStr"><string>SELECT * FROM AmaBks</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQID"><string>GETALL_AmaAuth</string></void>
+               <void method="setQStr"><string>SELECT * FROM AmaAuth</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQID"><string>GET_AmaAuth</string></void>
+               <void method="setQStr"><string>SELECT * FROM AmaAuth WHERE Asin=?</string></void>
+               <void method="setQTypes"><string>TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>member</string></void>
+               <void method="setQID"><string>DELETE_AmaAuth</string></void>
+               <void method="setQStr">
+                 <string>DELETE FROM AmaAuth WHERE Asin=?</string>
+               </void>
+               <void method="setQTypes"><string>TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBAuthQueryData">
+               <void method="setQAuth"><string>member</string></void>
+               <void method="setQID"><string>DELETE_AmaBks</string></void>
+               <void method="setQStr"><string>DELETE FROM AmaBks WHERE Asin=?</string></void>
+               <void method="setQTypes"><string>TEXT</string></void>
+            </object>
+        </void>
+     </object>
+   </void>
+ </object>
+</java>

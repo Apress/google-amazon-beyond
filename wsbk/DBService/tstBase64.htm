@@ -1,0 +1,42 @@
+<body>
+<script>
+var alph="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/* intToBits(13,6) == "001101"; binary representation of the given length */
+function intToBits(N,bits){
+  var res="";
+  for(var i=bits-1;i>=0;i--)res+=(1 & N>>i);
+  return res;
+}
+
+/* stringToBits("AB",8)="0100000101000010" because "A" is ASCII char 65 */
+function stringToBits(S,bits){
+ var res="";
+ for(var i=0;i<S.length;i++)res+=intToBits(S.charCodeAt(i),bits);
+ return res;
+}
+/* intFromBits("00111") = 13 */
+function intFromBits(S){
+  var res=0; 
+  for(var i=0;i<S.length;i++)res=2*res+(S.charAt(i)=="1"?1:0);
+  return res;
+}
+
+function b64Encode(A){
+ var S=stringToBits(A,8);
+ var Z="";
+ while(S.length>=6){
+   var chNum=intFromBits(S.substring(0,6));
+   Z+=alph.charAt(chNum);
+   S=S.substring(6);
+   }
+ /* S.length is now 0, 2, or 4 */
+ if(S.length==0)return Z;
+ if(S.length==4)return Z+alph.charAt(intFromBits(S+"00"))+"=";
+ if(S.length==2)return Z+alph.charAt(intFromBits(S+"0000"))+"==";
+ alert("A="+A+"\n decoded as "+Z+"["+S+"]");
+}
+document.write(b64Encode("tjm:tjm"));
+</script>
+</body>
+

@@ -1,0 +1,114 @@
+<html><head><title>Updating via GET</title></head><body>
+<p>
+The basic utility of REST is that we associate URLs with data in the obvious way:
+ <a href="http://localhost:65432/amaauth/"
+   target="dataFrame">http://localhost:65432/AmaAuth/</a>
+can represent a table, within which
+<a href="http://localhost:65432/amaauth/123"
+   target="dataFrame">http://localhost:65432/AmaAuth/123</a>
+can represent 0 or more authors for ASIN 123.
+
+Provided that useRequestURL is turned on at the DBAuthService server, 
+these forms can also use method="GET"
+to handle DELETE or PUT as well as POST invocations.
+   x target="dataFrame"
+<form method="GET" target="dataFrame"
+  action="http://localhost:65432/amaauth/123">
+<span>This form can GET, DELETE, or PUT 
+<a href="http://localhost:65432/amaauth/123"
+>http://localhost:65432/amaauth/123</a></span>
+<select size="1" name="METHOD">
+  <option selected="1" value="GET">GET</option>
+  <option value="PUT">PUT</option>
+  <option value="DELETE">DELETE</option>
+</select>
+<p>If the value is PUT, then we need an HTTP_BODY, constructed by
+filling in the textarea</p>
+<textarea name="HTTP_BODY" rows="4" cols="30">
+<paramList><dbParam>
+Joseph J. Schmoe
+</dbParam></paramList>
+</textarea>
+<input type="submit"/>
+</form>
+
+<span>This form can GET, DELETE, or PUT record 123</span>
+<form method="GET" target="dataFrame"
+ action="http://localhost:65432/" >
+<select size="1" name="METHOD">
+  <option selected="1" value="GET">GET</option>
+  <option value="PUT">PUT</option>
+  <option value="DELETE">DELETE</option>
+</select>
+<select size="1" name="URL">
+  <option selected="1" value="/amaauth/123">/amaauth/123</option>
+  <option value="/amaauth">/amaauth (all; only GET)</option>
+  <option value="/amabks/123">/amabks/123</option>
+  <option value="/amabks">/amabks (all) </option>
+</select>
+<p>If the value is PUT, then we need an HTTP_BODY, constructed by
+filling in the textarea</p>
+<textarea name="HTTP_BODY" rows="6" cols="90">
+<paramList>
+ <dbParam>123</dbParam>
+ <dbParam>Vulcan Thoughts</dbParam>
+ <dbParam>January, 2350</dbParam>
+ <dbParam>APress</dbParam>
+ <dbParam>$0.02</dbParam>
+ <dbParam>http://epsilon-eridani.net/out-there</dbParam>
+</paramList>
+</textarea>
+<input type="submit"/>
+</form>
+
+<span>This form can GET, DELETE, or PUT any record</span>
+<script>
+function fixURL(){
+//return alert(document.fixURLForm.theTABLE.value);
+  with(document.fixURLForm){
+    URL.value="/"+theTABLE.value+"/"+theAsin.value;
+    if(METHOD.value != "PUT") return true;
+    HTTP_BODY.value="<paramList><dbParam>";
+    if(theTABLE.value=="amaauth")
+      HTTP_BODY.value+=auth.value;
+    else {
+      HTTP_BODY.value+=ProductName.value+"</dbParam>\n<dbParam>";
+      HTTP_BODY.value+=ReleaseDate.value+"</dbParam>\n<dbParam>";
+      HTTP_BODY.value+=Manufacturer.value+"</dbParam>\n<dbParam>";
+      HTTP_BODY.value+=OurPrice.value;
+      HTTP_BODY.value+=bkURL.value+"</dbParam>\n<dbParam>";
+      }
+    HTTP_BODY.value+="</dbParam></paramList>"
+    }
+  return true;
+}
+</script>
+<form method="GET" target="dataFrame"
+ action="http://localhost:65432/" name="fixURLForm" onsubmit="return fixURL()">
+<input type="button" value="clickme" onclick="alert(escape('Bill the Cat'))"/>
+<select size="1" name="METHOD">
+  <option selected="1" value="GET">GET</option>
+  <option value="PUT">PUT</option>
+  <option value="DELETE">DELETE</option>
+</select>
+URL:<input type="text" name="URL" value=""/>
+auth:<input type="text" name="auth" value=""/>
+<table border="1">
+<tr><td>
+<select size="1" name="theTABLE">
+  <option selected="1" value="amaauth">amaauth</option>
+  <option value="amabks">amabks</option>
+</select>
+</td></tr>
+<tr><td><input type="text" name="theAsin" value="123"/></td></tr>
+<tr><td><input type="text" name="bkURL" value="http://blah.blip.com/bkurl.htm"/></td></tr>
+<tr><td><input type="text" name="ProductName" value="ProductName"/></td></tr>
+<tr><td><input type="text" name="ReleaseDate" value="ReleaseDate"/></td></tr>
+<tr><td><input type="text" name="Manufacturer" value="Manufacturer"/></td></tr>
+<tr><td><input type="text" name="OurPrice" value="OurPrice"/></td></tr>
+</table>
+<textarea name="HTTP_BODY" rows="6" cols="90">
+</textarea>
+<input type="submit"/>
+</form>
+</body></html>

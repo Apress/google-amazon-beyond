@@ -1,0 +1,48 @@
+<html><head><title>StockQuoteClient.html</title>
+<script src="../utils/xmlhttp.js"></script>
+<script src="../utils/getDOMdata.js"></script>
+<script>
+function doStockQuoteEnvelope(sym){
+ showCallRequest=false; showCallResponse=false;
+ var S='<?xml version="1.0" encoding="UTF-8"?>';
+ S+='<soapenv:Envelope';
+ S+='   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"';
+ S+='   xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+ S+='   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> ';
+ S+=' <soapenv:Body>  ';
+ S+='  <TradePriceRequest xmlns="http://example.com/stockquote.xsd">';
+ S+='   <tickerSymbol xsi:type="xsd:string" xmlns="">'+sym+'</tickerSymbol>';
+ S+='  </TradePriceRequest>';
+ S+=' </soapenv:Body>';
+ S+='</soapenv:Envelope>';
+alert(S);
+ return S;
+}
+function doStockQuote(S){
+  alert("doStockQuote("+S+")");
+  var msg= doSoapCall("http://localhost:8080/axis/services/StockQuotePort",
+                    "''",
+                  doStockQuoteEnvelope(S));
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+  var resp=getMessageDataDefault(msg,"price","NoReturn");
+  if(resp!="NoReturn")return resp;
+  alert("no price returned");
+  resp=toXML(msg);
+  return resp;
+}
+function doStockQuoteForm(frm){
+  document.getElementById("resultDiv").innerHTML=doStockQuote(frm.sym.value);
+}
+ 
+</script>
+</head>
+<body>
+<form name="sqForm" action="javascript:doStockQuoteForm(document.sqForm)">
+tickerSymbol:<input type="text" name="sym" value="IBM"/>
+<input type="submit" value="getStockQuote"/>
+</form>
+<div id="resultDiv">Result Goes Here</div>
+
+</body></html>

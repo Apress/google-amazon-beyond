@@ -1,0 +1,15 @@
+<html><head><title>xmlhttpKeywordCtl.html</title>
+</head><body>
+<script src="../utils/xmlhttp.js"></script>
+<script src="../utils/key.js"></script>
+<script>
+</script>
+This is a cross-browser invocation of amazon's keyword search.
+You will see both call and response.
+<form name="theForm" action="javascript:void">
+  keyword:<input type="text" name="keyword" value="Syracuse"/>
+<input type="button" value="getSearch" 
+  onclick="with(this.form){doAmazonKeywordSearch(amazonToken,keyword.value);}"/>
+
+</form>
+</body></html>

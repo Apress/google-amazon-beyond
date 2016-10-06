@@ -1,0 +1,11 @@
+<html><head><title>RestBookClub</title></head><body>
+
+<iframe id="iFR" height="100" width="300" src="javascript:'hello'" ></iframe>
+<form method="get" action="http://localhost:65432/" target="iFR">
+  <input type="text" name="URL" value="/AmaBks/"/>
+  <input type="button" value="hide" onclick="document.getElementById('iFR').width=0"/>
+  <input type="button" value="show" onclick="document.getElementById('iFR').width=300"/>
+  <input type="button" value="getInnerHTML" onclick="alert(document.getElementById('iFR').document)"/>
+  <input type="submit">
+</form>
+</body></html>

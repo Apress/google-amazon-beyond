@@ -1,0 +1,99 @@
+<html><head><title>Updating via GET</title></head><body>
+<h5>This form can GET, DELETE, or PUT 
+<a href="http://localhost:65432/amaauth/123">http://localhost:65432/amaauth/123</a></h5>
+(Provided that useRequestURL is turned on at the server)
+<form method="GET" action="http://localhost:65432/amaauth/123">
+<select size="1" name="METHOD">
+  <option selected="1" value="GET">GET</option>
+  <option value="PUT">PUT</option>
+  <option value="DELETE">DELETE</option>
+</select>
+<p>If the value is PUT, then we need an HTTP_BODY, constructed by
+filling in the textarea</p>
+<textarea name="HTTP_BODY" rows="4" cols="30">
+<paramList><dbParam>
+Joseph J. Schmoe
+</dbParam></paramList>
+</textarea>
+<input type="submit"/>
+</form>
+
+<h5>This form can GET, DELETE, or PUT record 123</h5>
+(Provided that useRequestURL is turned on at the server)
+<form method="GET" action="http://localhost:65432/" >
+<select size="1" name="METHOD">
+  <option selected="1" value="GET">GET</option>
+  <option value="PUT">PUT</option>
+  <option value="DELETE">DELETE</option>
+</select>
+<select size="1" name="URL">
+  <option selected="1" value="/amaauth/123">/amaauth/123</option>
+  <option value="/amaauth">/amaauth (all; only GET)</option>
+  <option value="/amabks/123">/amabks/123</option>
+  <option value="/amabks">/amabks (all) </option>
+</select>
+<p>If the value is PUT, then we need an HTTP_BODY, constructed by
+filling in the textarea</p>
+<textarea name="HTTP_BODY" rows="6" cols="90">
+<paramList>
+<dbParam>http://blah.com/therecord.htm</dbParam>
+<dbParam>very good product</dbParam>
+<dbParam>thursday</dbParam>
+<dbParam>n-topus</dbParam>
+<dbParam>$0.02</dbParam>
+</paramList>
+</textarea>
+<input type="submit"/>
+</form>
+
+<h5>This form can GET, DELETE, or PUT any record</h5>
+(Provided that useRequestURL is turned on at the server)
+<script>
+function fixURL(){
+//return alert(document.fixURLForm.theTABLE.value);
+  with(document.fixURLForm){
+    URL.value="/"+theTABLE.value+"/"+theAsin.value;
+    if(METHOD.value != "PUT") return true;
+    HTTP_BODY.value="<paramList><dbParam>";
+    if(theTABLE.value=="amaauth")
+      HTTP_BODY.value+=auth.value;
+    else {
+      HTTP_BODY.value+=bkURL.value+"</dbParam>\n<dbParam>";
+      HTTP_BODY.value+=ProductName.value+"</dbParam>\n<dbParam>";
+      HTTP_BODY.value+=ReleaseDate.value+"</dbParam>\n<dbParam>";
+      HTTP_BODY.value+=Manufacturer.value+"</dbParam>\n<dbParam>";
+      HTTP_BODY.value+=OurPrice.value;
+      }
+    HTTP_BODY.value+="</dbParam></paramList>"
+    }
+  return true;
+}
+</script>
+<form method="GET" action="http://localhost:65432/" name="fixURLForm" onsubmit="return fixURL()">
+<input type="button" value="clickme" onclick="alert(escape('Bill the Cat'))"/>
+<select size="1" name="METHOD">
+  <option selected="1" value="GET">GET</option>
+  <option value="PUT">PUT</option>
+  <option value="DELETE">DELETE</option>
+</select>
+URL:<input type="text" name="URL" value=""/>
+auth:<input type="text" name="auth" value=""/>
+<table border="1">
+<tr><td>
+<select size="1" name="theTABLE">
+  <option selected="1" value="amaauth">amaauth</option>
+  <option value="amabks">amabks</option>
+</select>
+</td></tr>
+<tr><td><input type="text" name="theAsin" value="123"/></td></tr>
+<tr><td><input type="text" name="bkURL" value="http://blah.blip.com/bkurl.htm"/></td></tr>
+<tr><td><input type="text" name="ProductName" value="ProductName"/></td></tr>
+<tr><td><input type="text" name="ReleaseDate" value="ReleaseDate"/></td></tr>
+<tr><td><input type="text" name="Manufacturer" value="Manufacturer"/></td></tr>
+<tr><td><input type="text" name="OurPrice" value="OurPrice"/></td></tr>
+</table>
+<textarea name="HTTP_BODY" rows="6" cols="90">
+</textarea>
+<input type="submit"/>
+</form>
+</body></html>

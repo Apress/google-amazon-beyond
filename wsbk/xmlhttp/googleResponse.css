@@ -1,0 +1,65 @@
+div { float: left; }
+
+table a:link { text-decoration: none; }
+table a:visited { text-decoration: none; }
+table a:hover { text-decoration: underline; }
+
+table { border: 1px solid black; }
+table td, table th { border: 1px solid #ccc; }
+
+a img { border: none; }
+
+Envelope {border: 1px solid black; }
+ // <?xml-stylesheet type="text/css" href="medical.css"?> 
+
+
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
+<SOAP-ENV:Body>
+<ns1:doGoogleSearchResponse xmlns:ns1="urn:GoogleSearch" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<return xsi:type="ns1:GoogleSearchResult">
+<documentFiltering xsi:type="xsd:boolean">true</documentFiltering>
+<estimatedTotalResultsCount xsi:type="xsd:int">153</estimatedTotalResultsCount>
+<directoryCategories xmlns:ns2="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns2:Array" ns2:arrayType="ns1:DirectoryCategory[0]">
+</directoryCategories>
+<searchTime xsi:type="xsd:double">0.103929</searchTime>
+<resultElements xmlns:ns3="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns3:Array" ns3:arrayType="ns1:ResultElement[2]">
+<item xsi:type="ns1:ResultElement">
+<cachedSize xsi:type="xsd:string">8k</cachedSize>
+<hostName xsi:type="xsd:string"/>
+<snippet xsi:type="xsd:string"> &lt;b&gt;...&lt;/b&gt; data, ; you provide the data (&lt;b&gt;y&lt;/b&gt;), the independent &lt;b&gt;...&lt;/b&gt; sliding aperture looks like: ; ;&lt;br&gt; |-&lt;b&gt;X+++++&lt;/b&gt;|---- center of &lt;b&gt;...&lt;/b&gt;  </snippet>
+<directoryCategory xsi:type="ns1:DirectoryCategory">
+<specialEncoding xsi:type="xsd:string"/>
+<fullViewableName xsi:type="xsd:string"/>
+</directoryCategory>
+<relatedInformationPresent xsi:type="xsd:boolean">true</relatedInformationPresent>
+<directoryTitle xsi:type="xsd:string"/>
+<summary xsi:type="xsd:string"/>
+<URL xsi:type="xsd:string">http://www.astro.washington.edu/deutsch-bin/getpro/library30.html?SLIDEFIL</URL>
+<title xsi:type="xsd:string">IDL Help</title>
+</item>
+<item xsi:type="ns1:ResultElement">
+<cachedSize xsi:type="xsd:string">58k</cachedSize>
+<hostName xsi:type="xsd:string"/>
+<snippet xsi:type="xsd:string"> &lt;b&gt;...&lt;/b&gt; Fergi el viciao de Josele &lt;b&gt;y&lt;/b&gt; pal cabeza &lt;b&gt;...&lt;/b&gt; XX $X +++++XX X#####XXX&lt;br&gt; &lt;b&gt;X+++++&lt;/b&gt; HX &lt;b&gt;...&lt;/b&gt;  </snippet>
+<directoryCategory xsi:type="ns1:DirectoryCategory">
+<specialEncoding xsi:type="xsd:string"/>
+<fullViewableName xsi:type="xsd:string"/>
+</directoryCategory>
+<relatedInformationPresent xsi:type="xsd:boolean">true</relatedInformationPresent>
+<directoryTitle xsi:type="xsd:string"/>
+<summary xsi:type="xsd:string"/>
+<URL xsi:type="xsd:string">http://www.melodysoft.com/cgi-bin/gbook.cgi?ID=Saludalia</URL>
+<title xsi:type="xsd:string">Saludalia</title>
+</item>
+</resultElements>
+<endIndex xsi:type="xsd:int">2</endIndex>
+<searchTips xsi:type="xsd:string"/>
+<searchComments xsi:type="xsd:string"/>
+<startIndex xsi:type="xsd:int">1</startIndex>
+<estimateIsExact xsi:type="xsd:boolean">false</estimateIsExact>
+<searchQuery xsi:type="xsd:string">x++++++y</searchQuery>
+</return>
+</ns1:doGoogleSearchResponse>
+
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

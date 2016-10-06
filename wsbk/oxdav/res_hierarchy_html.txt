@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <meta name="generator" content="HTML Tidy, see www.w3.org" />
+
+    <title>Testing oxdav</title>
+  </head>
+
+  <body>
+    <h1>Top Header</h1>
+    Top-level text, <br />
+     including <em>emphasized</em> text, with links to <a
+    href="http://www.google.com">google</a> and to the local <a
+    href="openXMLhelp.htm">help file</a>. 
+
+    <h2>Section 1</h2>
+    part of section 1. 
+
+    <h3>Section 1.1</h3>
+    This is in section 1.1 
+
+    <h3>Section 1.2</h3>
+    This is in section 1.2. 
+
+    <h4>Section 1.2.1</h4>
+    This is in section 1.2.1. 
+
+    <h2>Section 2</h2>
+    This is in section 2. 
+
+    <h3>Section 2.1</h3>
+    This is in section 2.1
+  </body>
+</html>
+

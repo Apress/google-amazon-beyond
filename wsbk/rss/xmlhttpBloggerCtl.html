@@ -1,0 +1,99 @@
+<html><head><title>xmlhttpBloggerCtl.html</title></head><body>
+<script src="../utils/xmlhttp.js"></script>
+<script>
+
+var appKey="51B7806A224D1BB39EAF5FB421835EEE54FD0E99";
+
+// http://plant.blogger.com/api/RPC2 like so:
+
+// POST /api/RPC2 HTTP/1.0
+//User-Agent: Java.Net Wa-Wa 2.0 
+//Host: plant.blogger.com 
+//Content-Type: text/xml 
+//Content-length: 515 
+
+function xmlRpc(ob){
+var S='<?xml version="1.0"?>\n';
+ S+='<methodCall>';
+ S+='  <methodName>'+ob.methodName+'</methodName>';
+ S+='  <params>';
+ for(var i=0;;i++){
+   var pVal= ob['p_'+i]; if(null==pVal)break;
+   var pType=ob['pType_'+i]; if(!pType)pType="string";
+   S+='  <param><value><'+pType+'>'+pVal+'</'+pType+'></value></param>\n';
+   }
+ S+='  </params>';
+ S+=' </methodCall>';
+ return doSoapCall("http://plant.blogger.com/api/RPC2",'',S);
+}
+function getUserBlogs2(nm,pwd){
+  var ob={methodName:"blogger.getUsersBlogs",
+          p_0:appKey,
+          p_1:nm,
+          p_2:pwd};
+  return xmlRpc(ob);
+}
+
+function getUsersBlogs(nm,pwd){
+var S='<?xml version="1.0"?>\n';
+ S+='<methodCall>';
+ S+='  <methodName>blogger.getUsersBlogs</methodName>';
+ S+='  <params>';
+ S+='  <param><value><string>'+appKey+'</string></value></param>';
+ S+='  <param><value><string>'+nm+'</string></value></param>';
+ S+='  <param><value><string>'+pwd+'</string></value></param>';
+ S+='  </params>';
+ S+=' </methodCall>';
+ doSoapCall("http://plant.blogger.com/api/RPC2",'',S);
+}
+function newPost(blogId,nm,pwd,content,publish){
+  var ob={methodName:"blogger.newPost",
+          p_0:appKey,p_1:blogId,p_2:nm,p_3:pwd,p_4:content,p_5:publish,
+          pType_5:"boolean"
+         };
+  return xmlRpc(ob);
+}
+function editPost(postId,nm,pwd,content,publish){
+  var ob={methodName:"blogger.editPost",
+          p_0:appKey,p_1:postId,p_2:nm,p_3:pwd,p_4:content,p_5:publish,
+          pType_5:"boolean"
+         };
+  return xmlRpc(ob);
+}
+</script>
+This is a cross-browser invocation of blogspot.com's Blogger .
+You will see both call and response.
+<form name="theForm" action="javascript:void">
+  name:<input type="text" name="nm" value="tom_myers"/>
+  pwd:<input type="password" name="pwd" value=""/>
+<input type="button" value="getUsersBlogs" 
+  onclick="with(this.form){getUsersBlogs(nm.value,pwd.value);}"/>
+</form>
+<form name="newPostForm" action="javascript:void">
+  blogId:<input type="text" name="blog" value="5424839"/>
+  name:<input type="text" name="nm" value="tom_myers"/> 
+  pwd:<input type="password" name="pwd" value=""/>
+  content:<input type="text" name="content" value=""/>
+<input type="button" value="newPost" 
+  onclick="with(this.form){newPost(blog.value,nm.value,pwd.value,content.value,'true');}"/>
+</form>
+
+<form name="editPostForm" action="javascript:void">
+  postId:<input type="text" name="postId" value="5424839"/>
+  name:<input type="text" name="nm" value="tom_myers"/> 
+  pwd:<input type="password" name="pwd" value=""/>
+  content:<input type="text" name="content" value=""/>
+<input type="button" value="newPost" 
+  onclick="with(this.form){newPost(postId.value,nm.value,pwd.value,content.value,'true');}"/>
+</form>
+
+
+#  appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
+# blogid (string): Unique identifier of the blog the post will be added to.
+# username (string): Login for a Blogger user who has permission to post to the blog.
+# password (string): Password for said username.
+# content (string): Contents of the post.
+# publish (boolean): If true, the blog will be published immediately after the post is made.
+
+
+</body></html>

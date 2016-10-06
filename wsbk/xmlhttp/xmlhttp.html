@@ -1,0 +1,184 @@
+<html><head><title>xmlhttp</title></head><body>
+<script src="../utils/key.js">/* var key = google key */</script>
+<script>
+
+function doGetCachedPageEnvelope(key,url){
+  var S="<?xml version='1.0' encoding='UTF-8'?>\n";
+  S+='<SOAP-ENV:Envelope';
+  S+=' xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+=' xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"';
+  S+=' xmlns:xsd="http://www.w3.org/1999/XMLSchema">';
+  S+='   <SOAP-ENV:Body>';
+  S+='   <ns1:doGetCachedPage xmlns:ns1="urn:GoogleSearch" ';
+  S+='     SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">';
+  S+='      <key xsi:type="xsd:string">' +key+ '</key>';
+  S+='      <url xsi:type="xsd:string">' +url+ '</url>';
+  S+='    </ns1:doGetCachedPage>';
+  S+='    </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';
+  return S;
+}
+function doGetCachedPage(key,url){
+  try{
+    var env=doGetCachedPageEnvelope(key,url);
+    var xmlhttp=null; var doc=null;
+    if(document.all) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+    else xmlhttp=new XMLHttpRequest();
+    if(!xmlhttp)
+      return alert("doGetCachedPage: cannot initialize xmlhttp object");
+    if(!document.all)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+    xmlhttp.open('POST',"http://api.google.com/search/beta2",false);
+    xmlhttp.setRequestHeader("SOAPAction", "doGoogleSearch")
+    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+    xmlhttp.send(env);
+    return xmlhttp.responseXML;
+  }catch(ex){alert("doGetCachedPage error: "+ex);}
+  return null;
+}
+
+
+
+
+
+
+function doSpellingSuggestionEnvelope(key,phrase){
+  var S="<?xml version='1.0' encoding='UTF-8'?>\n";
+  S+='<SOAP-ENV:Envelope';
+  S+=' xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+=' xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"';
+  S+=' xmlns:xsd="http://www.w3.org/1999/XMLSchema">';
+  S+='  <SOAP-ENV:Body>';
+  S+='   <ns1:doSpellingSuggestion xmlns:ns1="urn:GoogleSearch"';
+  S+='        SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">';
+  S+='      <key xsi:type="xsd:string">' +key+ '</key>';
+  S+='      <phrase xsi:type="xsd:string">' +phrase+ '</phrase>';
+  S+='    </ns1:doSpellingSuggestion>';
+  S+='  </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';
+  return S;
+}
+function doSpellingSuggestion(key,phrase){ 
+try{
+  var env=doSpellingSuggestionEnvelope(key,phrase);
+  var xmlhttp=null; var doc=null;
+  if(document.all) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+  else xmlhttp=new XMLHttpRequest();
+  if(!xmlhttp)return alert("doSpellingSuggestion error: cannot initialize xmlhttp object");
+  if(!document.all)netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+  xmlhttp.open('POST',"http://api.google.com/search/beta2",false);
+  xmlhttp.setRequestHeader("SOAPAction", "doSpellingSuggestion")
+  xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+  xmlhttp.send(env);
+  return xmlhttp.responseXML;
+}catch(ex){alert("doSpellingSuggestion error: "+ex);}
+return null;
+}
+
+function doGoogleSearchEnvelope(key,q,start,maxResults){
+  var env='<?xml version="1.0" encoding="UTF-8"?>\n';
+  env+='<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"';
+  env+='  xmlns:enc="http://schemas.xmlsoap.org/soap/encoding/"';
+  env+='  env:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"';
+  env+='  xmlns:xs="http://www.w3.org/1999/XMLSchema"';
+  env+='  xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance">';
+//  env+=' <env:Header/>';
+  env+=' <env:Body>';
+  env+='  <a0:doGoogleSearch xmlns:a0="urn:GoogleSearch">';
+  env+='   <key xsi:type="xs:string">'+key+'</key>';
+  env+='   <q xsi:type="xs:string">'+q+'</q>';
+  env+='   <start xsi:type="xs:int">'+start+'</start>';
+  env+='   <maxResults xsi:type="xs:int">'+maxResults+'</maxResults>';
+  env+='   <filter xsi:type="xs:boolean">1</filter>';
+  env+='   <restrict xsi:type="xs:string"/>';
+  env+='   <safeSearch xsi:type="xs:boolean">0</safeSearch>';
+  env+='   <lr xsi:type="xs:string"/>';
+  env+='   <ie xsi:type="xs:string">utf8</ie>';
+  env+='   <oe xsi:type="xs:string">utf8</oe>';
+  env+='  </a0:doGoogleSearch>';
+  env+=' </env:Body>';
+  env+='</env:Envelope>';
+  return env;
+}
+
+function doGoogleSearch(key,q,start,maxResults){ 
+try{
+  var env=doGoogleSearchEnvelope(key,q,start,maxResults);
+  var xmlhttp=null; var doc=null;
+  if(document.all) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+  else xmlhttp=new XMLHttpRequest();
+  if(!xmlhttp)return alert("doGoogleSearch: cannot initialize xmlhttp object");
+  if(!document.all)netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+  xmlhttp.open('POST',"http://api.google.com/search/beta2",false);
+  xmlhttp.setRequestHeader("SOAPAction", "doGoogleSearch")
+  xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+  xmlhttp.send(env);
+  return xmlhttp.responseXML;
+}catch(ex){alert("doGoogleSearch error: "+ex);}
+return null;
+}
+
+
+
+function toXML(x){
+  if(document.all)return x.xml;
+  if(!toXML.serializer)toXML.serializer=new XMLSerializer();
+  return toXML.serializer.serializeToString(x);
+}
+/**
+  * xml2Html(node) trivially transforms an XML node into an XHTML
+  *  representation with reasonable indentation. See
+  * http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/java-binding.html
+  * for nodeTypes, e.g. 1==Element, 7=Processing Instruction, 3=Text
+**/
+function xml2Html(node){
+  if(null==node)return "";
+  if(node.nodeType == 3) return node.nodeValue;
+  var name=node.nodeName;
+  var S="<div style='margin-left:10'>&lt;";
+  if(node.nodeType == 7) 
+    return S+"?"+node.nodeName+xmlAttrs2Html(node.attributes)+"?&gt;</div>";
+
+  S+=node.nodeName+xmlAttrs2Html(node.attributes);
+  S+= "&gt;";
+  for(var C=node.firstChild;null!=C;C=C.nextSibling)S+=xml2Html(C);
+
+  S+="&lt;"+node.nodeName+"&gt;</div>";
+  return S;
+}
+function xmlAttrs2Html(atts){
+  var S="";
+  if(atts!=null)
+    for(var i=0;i<atts.length;i++)
+      S+=" "+atts[i].name+"='"+atts[i].value+"'";
+  return S;
+}
+
+</script>
+This is a low-level API (xmlhttp) cross-browser approach to google's SOAP API.
+just fill in your query (or the page to be retrieved from cache, or the
+phrase for spelling correction. For a query, you can use <b>N</b> to limit
+the number of responses. The result will appear in the box, until sometime
+Real Soon Now when it will appear in a window or frame or something. I dunno.
+<form name="theForm" action="javascript:void">
+q:<input type="text" name="q" value="joe"/>
+N:<input type="text" name="N" value="5"/>
+<input type="button" value="search" 
+  onclick="with(this.form){theResult.value=toXML(doGoogleSearch(key,q.value,0,N.value));}"/>
+<input type="button" value="getCache" 
+  onclick="with(this.form){theResult.value=toXML(doGetCachedPage(key,q.value));}"/>
+<input type="button" value="spelling" 
+  onclick="with(this.form){theResult.value=toXML(doSpellingSuggestion(key,q.value));}"/>
+<br/>
+<a href="javascript:xml2Html(doGoogleSearch(key,document.theForm.q.value,0,document.theForm.N.value))" >search</a>
+<a href="javascript:xml2Html(doGetCachedPage(key,document.theForm.q.value))" >cache</a>
+<a href="javascript:xml2Html(doSpellingSuggestion(key,document.theForm.q.value))" >spell</a>
+
+<br/>
+<textarea name="theResult" rows="20" cols="120">
+</textarea>
+
+</form>
+<div id=
+</body></html>

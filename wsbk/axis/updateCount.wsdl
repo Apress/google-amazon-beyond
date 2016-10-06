@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<definitions name="updateCount"
+
+  targetNamespace="http://n-topus.com/DBS"
+          xmlns:tns="http://n-topus.com/DBS"
+          xmlns:xsd1="http://n-topus.com/DBS"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+  <types>
+     <schema targetNamespace="http://n-topus.com/DBS"
+            xmlns="http://www.w3.org/2000/10/XMLSchema">
+         <element name="doSQLRequest">
+            <complexType>
+                <all>
+                   <element name="DBServerCallParams">
+                    <complexType>
+                      <sequence>
+                        <element name="dbParam" type="string"
+                                 minOccurs="1" maxOccurs="unbounded"/>
+                      </sequence>
+                    </complexType>
+                   </element>
+                </all>
+            </complexType>
+         </element>
+         <element name="doSQLResponse">
+            <complexType>
+                <all>
+                    <element name="span" type="float">
+                       <attribute name="class" type="string"/>
+                    </element>
+                </all>
+            </complexType>
+         </element>
+     </schema>
+  </types>
+
+  <message name="GetUpdateCountInput">
+      <part name="body" element="xsd1:doSQLRequest"/>
+  </message>
+
+  <message name="GetUpdateCountOutput">
+      <part name="body" element="xsd1:doSQLResponse"/>
+  </message>
+
+  <portType name="UpdateCountPortType">
+      <operation name="GetUpdateCount">
+         <input message="tns:GetUpdateCountInput"/>
+         <output message="tns:GetUpdateCountOutput"/>
+      </operation>
+  </portType>
+
+  <binding name="UpdateCountBinding" type="tns:UpdateCountPortType">
+      <soap:binding style="document"
+        transport="http://schemas.xmlsoap.org/soap/http"/>
+      <operation name="GetUpdateCount">
+         <soap:operation soapAction="DBServerCall"/>
+         <input>
+             <soap:body use="literal"/>
+         </input>
+         <output>
+             <soap:body use="literal"/>
+         </output>
+      </operation>
+  </binding>
+
+  <service name="UpdateCountService">
+      <documentation>The update part of DBAuthService</documentation>
+      <port name="UpdateCountPort" binding="tns:UpdateCountBinding">
+         <soap:address location="http://localhost:65432/"/>
+      </port>
+  </service>
+
+</definitions>

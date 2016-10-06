@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Google Cache</title>
+<script src="../utils/key.js"> </script>
+<script src="../utils/xmlhttp.js"> </script>
+<script src="../utils/getDOMdata.js"> </script>
+<script src="../utils/base64.js"> </script>
+<script type="text/javascript">
+function getCachedPage(url){ alert(url+","+key);
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+  var msg=doGetCachedPage(key,url);
+  var res=getMessageData(msg,"return");
+  alert("b64 data is "+res+"\nwait for javascript decoding");
+  return b64Decode(res);
+}
+function writeCachedPage(url){
+  with(parent.resultFrame)
+    {document.write(getCachedPage(url));document.close();}
+}
+</script>
+</head>
+<body>
+
+<div style="float: right">
+<a href="http://www.google.com/apis/" target="_top">googleAPIs</a>
+</div>
+
+<form name="theForm" action="javascript:void">
+<b>Google Cache</b> 
+theURL: <input type="text" name="theURL" value="www.xmethods.com">
+<input type="button" value="getCachedPage"
+       onclick="writeCachedPage(this.form.theURL.value)"/>
+
+</form>
+
+</body>
+</html>

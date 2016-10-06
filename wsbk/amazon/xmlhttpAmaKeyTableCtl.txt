@@ -1,0 +1,96 @@
+........................................................................
+........................................................................
+........................................................................
+........................................................................
+<html><head><title>xmlhttpAmaKeyTableCtl.html</title>
+</head><body>
+<script src="../utils/xmlhttp.js"></script>
+<script src="../utils/getDOMdata.js"></script>
+<script src="../utils/key.js"></script>
+<script>
+showCallRequest=false; // turn off doSoapCall's own XML-display.
+showCallResponse=false;
+/*
+<SOAP-ENV:Fault>
+  <faultcode xsi:type='xsd:string'>SOAP-ENV:Client</faultcode>
+  <faultstring xsi:type='xsd:string'>Bad Request</faultstring>
+  <detail xsi:type='xsd:string'> There were no exact matches for the search </detail>
+</SOAP-ENV:Fault>
+*/
+
+function showAmazonResultTable(keyword){
+  var resultOb=doAmazonKeywordSearch(amazonToken,keyword);
+  var returnOb=resultOb.getElementsByTagName("return");
+  if(!returnOb || returnOb.length == 0)
+    return showError(keyword,resultOb,parent.dataFrame);
+  showResultTable(keyword,returnOb[0],parent.dataFrame);
+}
+function showError(key,resOb,win){ 
+  var S="<html><head><title>Error from "+key+"</title></head>\n";
+  S+="<body><h1>ERROR in search for:"+key+"</h1><table>";
+  S+="<tr><td>faultCode=</td><td>"+getMessageData(resOb,"faultcode")+"</td></tr>\n";
+  S+="<tr><td>faultString=</td><td>"+getMessageData(resOb,"faultstring")+"</td></tr>\n";
+  S+="</table><p>"+getMessageData(resOb,"detail")+"</p>\n";
+  S+="</body></html>";
+  win.document.write(S);
+  win.document.close();
+}
+function showResultTable(key,retOb,win){
+  var S="<html><head><title>Search Result for "+key+"</title></head>\n";
+  S+="<body><h1>Searched for "+key+"</h1><table border='1'>\n";
+  var topDetails=retOb.getElementsByTagName("Details");
+  if(topDetails && topDetails.length > 0) {
+    var details=topDetails[0].getElementsByTagName("Details");
+    for(var i=0;i<details.length;i++)
+      S+=showDetailsAsRow(details[i]);
+    }
+  S+="</table></body></html>";
+  win.document.write(S);
+  win.document.close();
+}
+
+/*
+<Details ...>
+ <Details xsi:type='amazon:Details'>
+  <Url xsi:type='xsd:string'>http://www.amazon.com/exec/obidos/redirect?tag=webservices-20%26creative=AMAZON_DEV_TOKEN%26camp=2025%26link_code=sp1%26path=ASIN/1583820175</Url>
+  <Asin xsi:type='xsd:string'>1583820175</Asin>
+  <ProductName xsi:type='xsd:string'>Syracuse Basketball: A Century of Memories</ProductName>
+  <Catalog xsi:type='xsd:string'>Book</Catalog>
+  <Authors SOAP-ENC:arrayType='xsd:string[2]' xsi:type='SOAP-ENC:Array'>
+    <Author xsi:type='xsd:string'>Bob Snyder</Author>
+    <Author xsi:type='xsd:string'>the Syracuse Newspapers</Author>
+  </Authors>
+  <ReleaseDate xsi:type='xsd:string'>01 January, 2000</ReleaseDate>
+  <Manufacturer xsi:type='xsd:string'>Sports Publishing, Inc.</Manufacturer>
+  <ImageUrlSmall xsi:type='xsd:string'>http://images.amazon.com/images/P/1583820175.01.THUMBZZZ.jpg</ImageUrlSmall>
+  <ImageUrlMedium xsi:type='xsd:string'>http://images.amazon.com/images/P/1583820175.01.MZZZZZZZ.jpg</ImageUrlMedium>
+  <ImageUrlLarge xsi:type='xsd:string'>http://images.amazon.com/images/P/1583820175.01.LZZZZZZZ.jpg</ImageUrlLarge>
+  <ListPrice xsi:type='xsd:string'>$24.95</ListPrice>
+  <OurPrice xsi:type='xsd:string'>$24.95</OurPrice>
+ </Details>
+*/
+
+function showDetailsAsRow(details){ 
+// initial version: return "<tr><td>"+xml2Html(details)+"</td></tr>\n";
+  var smallImageUrl=getMessageDataDefault(details, 'ImageUrlSmall','');
+  var largeImageUrl=getMessageDataDefault(details, 'ImageUrlLarge','');
+  var bookUrl=getMessageData(details, 'Url');
+  var productName=getMessageData(details,"ProductName");
+  var price=getMessageDataDefault(details,"OurPrice",'');
+  var S="<tr>";
+  S+="<td><a href='"+largeImageUrl+"'><img src='"+smallImageUrl+"'/></a></td>";
+  S+="<td><a href='"+bookUrl+"'>"+productName+"</a></td>";
+  S+="<td>"+price+"</td>";
+  S+="</tr>\n";
+  return S;
+}
+</script>
+This is a cross-browser invocation of amazon's keyword search,
+with the response appearing as a table.
+<form name="theForm" action="javascript:alert('click getSearch')">
+  keyword:<input type="text" name="keyword" value="Syracuse"/>
+<input type="button" value="getSearch" 
+  onclick="with(this.form){showAmazonResultTable(keyword.value);}"/>
+
+</form>
+</body></html>

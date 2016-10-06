@@ -1,0 +1,15 @@
+........................................................................
+........................................................................
+........................................................................
+........................................................................
+<html><head><title>frameTop.html</title></head>
+<frameset rows="30%,70%">
+  <frame name="ctlFrame" src="mindShare.html"/>
+  <frameset cols="50%,50%">
+    <frame name="callFrame" src="about:blank"/>
+    <frame name="responseFrame" src="about:blank"/>
+  </frameset>
+
+</frameset></html>
+
+

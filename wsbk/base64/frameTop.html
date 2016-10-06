@@ -1,0 +1,10 @@
+<html><head><title>frameTop.html</title></head>
+<frameset rows="10%,30%,60%">
+  <frame name="ctlFrame" src="getCache.html"/>
+  <frameset cols="50%,50%">
+    <frame name="callFrame" src="about:blank"/>
+    <frame name="responseFrame" src="about:blank"/>
+  </frameset>
+  <frame name="resultFrame"
+     src="javascript:'cached page goes here; wait for decoding.'"/>
+</frameset></html>

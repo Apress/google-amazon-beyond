@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="AmaGet01.xsl"?>
+<ProductInfo>
+	<Details url="http://www.amazon.com/exec/obidos/ASIN/039480001X">
+		<Asin>039480001X</Asin>
+		<ProductName>The Cat in the Hat</ProductName>
+		<Catalog>Book</Catalog>
+		<Authors>
+			<Author>Seuss</Author>
+			<Author>Theodor Seuss Geisel</Author>
+			<Author>Dr. Seuss</Author>
+		</Authors>
+		<ReleaseDate>June 1957</ReleaseDate>
+		<Manufacturer>Random House</Manufacturer>
+		<ListPrice>$8.99</ListPrice>
+		<OurPrice>$8.99</OurPrice>
+		<UsedPrice>$6.95</UsedPrice>
+		<ImageUrlSmall>http://images.amazon.com/images/P/039480001X.01.THUMBZZZ.jpg</ImageUrlSmall>
+		<ImageUrlMedium>http://images.amazon.com/images/P/039480001X.01.MZZZZZZZ.jpg</ImageUrlMedium>
+		<ImageUrlLarge>http://images.amazon.com/images/P/039480001X.01.LZZZZZZZ.jpg</ImageUrlLarge>
+	</Details>
+</ProductInfo>
+
+
+

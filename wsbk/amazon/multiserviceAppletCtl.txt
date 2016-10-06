@@ -1,0 +1,95 @@
+........................................................................
+........................................................................
+........................................................................
+........................................................................
+<html><head><title>multiserviceAppletCtl.html</title>
+<applet
+  name="XmlHttp"
+  height="2" width="2" 
+  code="soapUtil/SoapApplet.class" >
+</applet>
+</head><body>
+<script src="../utils/key.js">
+  /* included for amazonToken and google "key" */
+</script>
+<script src="../utils/xmlhttp.js">
+  /* included for parseXML, xml2Html, and Envelope functions */
+</script>
+<script>
+
+function showRes(res){
+  displayXML(parseXML(res),parent.dataFrame);
+}
+
+function doAmazonKeywordSearch(token,keyword){
+  if(!confirm("amazonSearch("+token+","+keyword+")"))
+    return false;
+  showRes(document.XmlHttp.sendSoap(
+      "http://soap.amazon.com/onca/soap",
+      "KeywordSearchRequest",
+      doAmazonKeywordSearchEnvelope(token,keyword)));
+  return false;
+}
+
+function doGetWeatherReport(code){
+  if(!confirm("dogetweatherreport("+code+")"))return false;
+  showRes(document.XmlHttp.sendSoap("http://live.capescience.com/ccx/GlobalWeather",
+                    "capeconnect:GlobalWeather:GlobalWeather#getWeatherReport",
+                  doGetWeatherReportEnvelope(code)));
+  return false;
+}
+
+function doGoogleSearch(key,q,start,maxResults){ 
+   if(!confirm("doGoogleSearch("+key+","+q+")"))return false;
+  showRes(document.XmlHttp.sendSoap(
+                  "http://api.google.com/search/beta2",
+                  "doGoogleSearch",
+                  doGoogleSearchEnvelope(key,q,start,maxResults)));
+  return false;
+
+}
+
+
+// doAmazonKeywordSearch(amazonToken,document.AmaKey.keyword.value);"
+</script>
+This is an applet-based invocation of three services: Amazon, Google, and
+CapeScience (weather). 
+<table border="1"><tr><td>
+<form name="AmaKey"
+  action="javascript:void" 
+  onSubmit="
+   return doAmazonKeywordSearch(amazonToken,document.AmaKey.keyword.value);"
+>
+
+Search Amazon for books:<br/>
+
+<input type="text" size="12" name="keyword" value="Harry Potter"/>
+<input type="submit" value="Go" />
+</form></td>
+
+<td><form name="google" action="javascript:void"
+  onSubmit="
+   return doGoogleSearch(key,document.google.q.value,0,document.google.max.value);"
+>
+  Search Google:<br/>
+<input type="text" name="q" value="Milan Kundera" size="15"/>
+  N :<input type="text" name="max" size="2" value="2"/>
+ <input type="submit" value="Go" />
+</form></td>
+
+<td><form name="weather" action="javascript:void"
+  onSubmit="return doGetWeatherReport(document.weather.airport.value);">
+
+Check weather for Airport code:<br/>
+<input type="text" name="airport" size="4" value="JFK"/>
+<input type="submit" value="Go" />
+<input
+  type="button"
+  value="Find Code for:" 
+onclick="top.location='http://www.ar-group.com/Airport-Locator.asp?RequestCity='+this.form.city.value" />
+<input type="text" name="city" size="8" value="Syracuse"/>
+</form></td>
+
+</tr></table>
+</body></html>
+

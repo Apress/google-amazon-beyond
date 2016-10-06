@@ -1,0 +1,28 @@
+<html><head><title>appletSetup.html</title>
+</head><body>
+<p>Amazon applet setup. The applet itself is quite simple, but it needs to
+make the connection to Amazon. This involves a security check: 
+it is not safe in general
+for applets to go all over the net, because then somebody could put
+an applet on a web page which would connect you with the world in
+ways you wouldn't know about. So, we can learn all about signing
+applets, or we can learn all about the policy tools, or we can cheat.
+<p></p>We're going to cheat: we're going to compile this soapUtil code 
+from the classpath (from our WEB-INF/classes directory) via
+<quote><pre>
+  javac soapUtil/*.java
+  jar -cf SoapApplet.jar soapUtil/*.class
+</pre></quote>
+and then move that jar to our JAVA_HOME's jre/lib/ext directory.
+(If we have two, we'll put it in both just to save on thinking.)
+That way, by default it has AllPermissions, as explained at
+ <a href="http://java.sun.com/docs/books/tutorial/ext/security/policy.html">
+   http://java.sun.com/docs/books/tutorial/ext/security/policy.html
+ </a>. This is not the safest way, but for personal use it should be fine.
+</p><p>The applet code also requires explicit use of Java's PrivilegedAction
+class, which asks for the permission. (The answer is yes, but you do have to ask.)
+</p><p> One final issue: you may need to install the Java Plug-In. (This should
+have been installed with your installation of the JDK, but you might want to
+check the Plug-In settings, e.g. in your Control Panel.)
+</p>
+</body></html>

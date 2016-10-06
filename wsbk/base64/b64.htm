@@ -1,0 +1,154 @@
+<html><head></head><body>
+<script>
+var alph="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+var indexOb=makeIndexObject(alph);
+function makeIndexObject(S){
+  var ob=new Object();
+  if(S==null)return ob;
+  for(var i=0;i<S.length;i++)ob[S.charAt(i)]=i;
+  return ob;
+}
+
+
+function StringProducer(S){
+  this.S=S;
+  this.loc=0;
+}
+function sp_get(N){
+  var res="";
+  if(this.loc >= this.S.length) return res;
+  var getEnd=this.loc+N;
+  if(getEnd >= this.S.length){getEnd=this.S.length;}
+  res=this.S.substring(this.loc,getEnd);
+  this.loc=getEnd;
+  return res;
+}
+StringProducer.prototype.get=sp_get;
+
+function stringToBits(S,bits){
+ var res="";
+ for(var i=0;i<S.length;i++)res+=intToBits(indexOb[S.charAt(i)],bits);
+ return res;
+}
+function intToBits(N,bits){
+  var res="";
+  for(var i=bits-1;i>=0;i--)res+=(1 & N>>i);
+  return res;
+}
+
+function intFromBits(S){
+  var res=0; 
+  for(var i=0;i<S.length;i++)res=2*res+(S.charAt(i)=="1"?1:0);
+  return res;
+}
+function htmlEncode(chars){
+ var res="";
+ for(var i=0;i<chars.length;i++){
+  var c=chars.charAt(i);
+  if(c=="<")res+="&lt;";
+  else if(c==">")res+="&gt;";
+  else if(c=="'")res+="&apos;";
+  else if(c=='"')res+="&quot;";
+  else res+=c;
+  }
+ return res;
+}
+function b64Decode(S){ // assumes S.length%4==0
+  var SP=new StringProducer(S);
+  var chars="";
+  for(var r=SP.get(4);r.length>0;r=SP.get(4)){
+    var bsp=new StringProducer(stringToBits(r,6));
+    for(var ob=bsp.get(8);ob.length>0;ob=bsp.get(8))
+      chars+=String.fromCharCode(intFromBits(ob));
+    }
+  return chars;
+}
+</script>
+<p>This page illustrates base64 decoding, in the special case where the encoded
+value really is a character sequence which can be displayed on an html page;
+for example, a cached web-page returned from the Google SOAP API always begins
+with
+</p>
+<p><code>
+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9...
+</code></p>
+<p>which represents "&lt;meta http-equiv ...", as seen in the following table:
+<table border="1">
+<tr><th>b64</th><th>bits</th><th>bytes</th><th>chars</th></tr>
+<script>
+  var S="PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9";
+  var SP=new StringProducer(S);
+  var overallChars="";
+  for(var res=SP.get(4);res.length>0;res=SP.get(4)){
+    document.write("<tr><td>"+res+"</td>");
+    var bitSeq=stringToBits(res,6);
+    document.write("<td>"+bitSeq+"</td>");
+    var bSP=new StringProducer(bitSeq);
+    var outBytes=""; var outChars="";
+    for(var ob=bSP.get(8);ob.length>0;ob=bSP.get(8)){
+      var intb=intFromBits(ob);
+      outBytes+=intb+" ";
+      outChars+=String.fromCharCode(intb);
+      }
+    document.write("<td>"+outBytes+"</td>");
+    document.write("<td>"+htmlEncode(outChars)+"</td></tr>\n");
+    overallChars+=outChars;
+    }
+</script>
+</table>
+<p>Overall:<code>b64Decode(...)=
+'<script>document.write(htmlEncode(b64Decode(S)));</script>'
+</code></p>
+<p>What's happening here is that we're taking the string
+</p>
+<p><code>
+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9...
+</code></p>
+<p>We collect this in four-character sequences, such as "PG1l"; we decode each of 
+these into four
+6-bit numbers, using their positions in the base64 digit sequence
+</p>
+<p><code>
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+</code></p>
+<p>For example, the initial "P" of our sample sequence contributes the bits
+"001111", because it is in position 15=0+0+8+4+2+1, and "G" contributes the bits
+"000110" because it is in position 6=0+0+0+4+2+0. Taking the first eight bits
+produces 00111100, which is the byte 0+0+32+16+8+4+0+0=60, which is the ASCII
+(or UTF-8) encoding for "&lt;", which is therefore our first output character.
+That's how it works. Our semi-final b64Decode method is
+</p>
+<code><pre>
+function b64Decode(S){ // assumes S.length%4==0
+  var SP=new StringProducer(S);
+  var chars="";
+  for(var r=SP.get(4);r.length>0;r=SP.get(4)){
+    var bsp=new StringProducer(stringToBits(r,6));
+    for(var ob=bsp.get(8);ob.length>0;ob=bsp.get(8))
+      chars+=String.fromCharCode(intFromBits(ob));
+    }
+  return chars;
+}
+</pre></code>
+<p>A StringProducer is an object we define in such a way that it can produce
+a string in segments, such as 4 base64 digits at a time, or 8 bits at a time;
+the stringToBits and intFromBits methods take us to and from the individual-bit
+view of the data.
+</p>
+For a final example, let's look at the b64 result of a simple google cache query;
+we put the result in a textarea, and then you can click on the submit button to
+open that value in a new window or you can click the decode button to decode it
+in place. Notice that the actual data ends with "=="; since "=" is not handled 
+by this version of b64Decode, the last few characters of the result are garbage,
+but they come after the closing <code>/html</code> tag. 
+<form name="frm" action="javascript:b64Decode(document.frm.b64.value)">
+<textarea name="b64" rows="3" cols="120">
+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9SVNPLTg4NTktMSI+CjxCQVNFIEhSRUY9Imh0dHA6Ly9jcy5jb2xnYXRlLmVkdS8iPjx0YWJsZSBib3JkZXI9MSB3aWR0aD0xMDAlPjx0cj48dGQ+PHRhYmxlIGJvcmRlcj0xIGJnY29sb3I9I2ZmZmZmZiBjZWxscGFkZGluZz0xMCBjZWxsc3BhY2luZz0wIHdpZHRoPTEwMCUgY29sb3I9I2ZmZmZmZj48dHI+PHRkPjxmb250IGZhY2U9YXJpYWwsc2Fucy1zZXJpZiBjb2xvcj1ibGFjayBzaXplPS0xPlRoaXMgaXMgPGI+PGZvbnQgY29sb3I9IzAwMzliNj5HPC9mb250PiA8Zm9udCBjb2xvcj0jYzQxMjAwPm88L2ZvbnQ+IDxmb250IGNvbG9yPSNmM2M1MTg+bzwvZm9udD4gPGZvbnQgY29sb3I9IzAwMzliNj5nPC9mb250PiA8Zm9udCBjb2xvcj0jMzBhNzJmPmw8L2ZvbnQ+IDxmb250IGNvbG9yPSNjNDEyMDA+ZTwvZm9udD48L2I+J3MgPGEgaHJlZj0iaHR0cDovL3d3dy5nb29nbGUuY29tL2hlbHAvZmVhdHVyZXMuaHRtbCNjYWNoZWQiPjxmb250IGNvbG9yPWJsdWU+Y2FjaGU8L2ZvbnQ+PC9hPiBvZiA8QSBIUkVGPSJodHRwOi8vY3MuY29sZ2F0ZS5lZHUvIj48Zm9udCBjb2xvcj1ibHVlPmh0dHA6Ly9jcy5jb2xnYXRlLmVkdS88L2ZvbnQ+PC9hPi48YnI+CjxiPjxmb250IGNvbG9yPSMwMDM5YjY+RzwvZm9udD4gPGZvbnQgY29sb3I9I2M0MTIwMD5vPC9mb250PiA8Zm9udCBjb2xvcj0jZjNjNTE4Pm88L2ZvbnQ+IDxmb250IGNvbG9yPSMwMDM5YjY+ZzwvZm9udD4gPGZvbnQgY29sb3I9IzMwYTcyZj5sPC9mb250PiA8Zm9udCBjb2xvcj0jYzQxMjAwPmU8L2ZvbnQ+PC9iPidzIGNhY2hlIGlzIHRoZSBzbmFwc2hvdCB0aGF0IHdlIHRvb2sgb2YgdGhlIHBhZ2UgYXMgd2UgY3Jhd2xlZCB0aGUgd2ViLjxicj4KVGhlIHBhZ2UgbWF5IGhhdmUgY2hhbmdlZCBzaW5jZSB0aGF0IHRpbWUuICBDbGljayBoZXJlIGZvciB0aGUgPEEgSFJFRj0iaHR0cDovL2NzLmNvbGdhdGUuZWR1LyI+PGZvbnQgY29sb3I9Ymx1ZT5jdXJyZW50IHBhZ2U8L2ZvbnQ+PC9hPiB3aXRob3V0IGhpZ2hsaWdodGluZy48YnI+VG8gbGluayB0byBvciBib29rbWFyayB0aGlzIHBhZ2UsIHVzZSB0aGUgZm9sbG93aW5nIHVybDogPGNvZGU+aHR0cDovL3d3dy5nb29nbGUuY29tL3NlYXJjaD9jbGllbnQ9c29hcCZhbXA7cT1jYWNoZTpodHRwJTNBJTJGJTJGY3MuY29sZ2F0ZS5lZHU8L2NvZGU+PC9mb250Pjxicj48YnI+PGNlbnRlcj48Zm9udCBzaXplPS0yPjxpPkdvb2dsZSBpcyBub3QgYWZmaWxpYXRlZCB3aXRoIHRoZSBhdXRob3JzIG9mIHRoaXMgcGFnZSBub3IgcmVzcG9uc2libGUgZm9yIGl0cyBjb250ZW50LjwvaT48L2ZvbnQ+PC9jZW50ZXI+PC90ZD48L3RyPjwvdGFibGU+PC90ZD48L3RyPjwvdGFibGU+Cjxocj4KPGh0bWw+DQoNCjxoZWFkPg0KPHRpdGxlPldlbGNvbWUgdG8gdGhlIENvbXB1dGVyIFNjaWVuY2UgRGVwdC4gV2Vic2l0ZSA8L3RpdGxlPg0KPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJzdHlsZS5jc3MiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCjwvc3R5bGU+DQo8L2hlYWQ+DQoNCjxib2R5Pg0KDQo8Y2VudGVyPg0KPHRhYmxlIGhlaWdodD0xMDAlIG1hcmdpbi1sZWZ0PSc1NTAnPg0KPHRyPjx0ZCByb3dzcGFuPTMgd2lkdGg9JzEwMCc+PC90ZD4NCjx0ZD4NCjxjZW50ZXI+PGEgaHJlZj0gImluZGV4Lmh0bWwiPiA8aW1nIHNyYz0iaW1nL2NzbG9nbzQuZ2lmIiB3aWR0aD00MDAgYWx0PSJDb21wdXRlciBTY2llbmNlIGF0IENvbGdhdGUgVW5pdmVyc2l0eSIgb25Nb3VzZU92ZXI9InNyYz0naW1nL2NzbG9nbzQyLmdpZiciIG9uTW91c2VPdXQ9InNyYz0naW1nL2NzbG9nbzQuZ2lmJyI+PC9hPjxicj48YnI+DQo8YSBocmVmPSJwZW9wbGUuaHRtbCI+PGltZyBoZWlnaHQ9MjAgd2lkdGg9NzUgc3JjPSJpbWcvcGVvcGxlLmdpZiIgb25Nb3VzZU92ZXI9InNyYz0naW1nL3Blb3BsZTIuZ2lmJyIgb25Nb3VzZU91dD0ic3JjPSdpbWcvcGVvcGxlLmdpZiciIGFsdD0iUGVvcGxlIiA+PC9hPg0KPGltZyBzcmM9ImltZy9idWxsZXQuZ2lmIj4gDQo8YSBocmVmPSAiY3Vyci5odG1sIj4gPGltZyBoZWlnaHQ9MjAgd2lkdGg9MTE3IHNyYz0iaW1nL2N1cnJpY3VsdW0uZ2lmIiBvbk1vdXNlT3Zlcj0ic3JjPSdpbWcvY3VycmljdWx1bTIuZ2lmJyIgb25Nb3VzZU91dD0ic3JjPSdpbWcvY3VycmljdWx1bS5naWYnIiBhbHQ9IkN1cnJpY3VsdW0iPjwvYT4gDQo8aW1nIHNyYz0iaW1nL2J1bGxldC5naWYiPiANCjxhIGhyZWY9ICJsYWJzLmh0bWwiPiA8aW1nIGhlaWdodD0yMCB3aWR0aD0xMzYgc3JjPSJpbWcvbGFib3JhdG9yaWVzLmdpZiIgb25Nb3VzZU92ZXI9InNyYz0naW1nL2xhYm9yYXRvcmllczIuZ2lmJyIgb25Nb3VzZU91dD0ic3JjPSdpbWcvbGFib3JhdG9yaWVzLmdpZiciIGFsdD0iTGFib3JhdG9yaWVzIj48L2E+IA0KPGltZyBzcmM9ImltZy9idWxsZXQuZ2lmIj4NCjxhIGhyZWY9ICJjb250YWN0Lmh0bWwiPiA8aW1nIGhlaWdodD0yMCB3aWR0aD0xMzMgc3JjPSJpbWcvY29udGFjdGluZm8uZ2lmIiBvbk1vdXNlT3Zlcj0ic3JjPSdpbWcvY29udGFjdGluZm8yLmdpZiciIG9uTW91c2VPdXQ9InNyYz0naW1nL2NvbnRhY3RpbmZvLmdpZiciIGFsdD0iQ29udGFjdCBJbmZvIj48L2E+IA0KPGltZyBzcmM9ImltZy9idWxsZXQuZ2lmIj4NCjxhIGhyZWY9ICJhY3Rpdml0aWVzLmh0bWwiPiA8aW1nIGhlaWdodD0yMCB3aWR0aD0xMDMgc3JjPSJpbWcvYWN0aXZpdGllcy5naWYiIG9uTW91c2VPdmVyPSJzcmM9J2ltZy9hY3Rpdml0aWVzMi5naWYnIiBvbk1vdXNlT3V0PSJzcmM9J2ltZy9hY3Rpdml0aWVzLmdpZiciIGFsdD0iQWN0aXZpdGllcyI+PC9hPg0KDQo8L2NlbnRlcj48YnI+DQo8L3RkPg0KPHRkIHJvd3NwYW49MyB3aWR0aD01MD48L3RkPjwvdHI+DQo8dHI+DQoNCjx0ZD4NCjxwPkNvbXB1dGVyIFNjaWVuY2UgaXMgdGhlIHN0dWR5IG9mIGFsZ29yaXRobWljIHByb2Nlc3NlcyBhbmQgdGhlIG1hY2hpbmVzIHdoaWNoIGNhcnJ5IG91dCB0aGVzZSBwcm9jZXNzZXMuIENvbXB1dGVyIFNjaWVuY2UgaXMgYSBtaXggb2YgdGhlb3J5LCBhcHBsaWNhdGlvbiwgZGVzaWduLCBhbmQgZXhwZXJpbWVudC4gQ29sZ2F0ZSB3YXMgb25lIG9mIHRoZSBmaXJzdCBjb2xsZWdlcyB0byBlc3RhYmxpc2ggYW4gaW5kZXBlbmRlbnQgY29tcHV0ZXIgc2NpZW5jZSBwcm9ncmFtIGFuZCBpdCBjb250aW51ZXMgdG8gYmUgYSBsZWFkZXIgaW4gdGhlIHRlYWNoaW5nIG9mIGNvbXB1dGVyIHNjaWVuY2UgYXQgdGhlIHVuZGVyZ3JhZHVhdGUgbGV2ZWwuIENvbGdhdGUgb2ZmZXJzIGEgZnVsbCBjb25jZW50cmF0aW9uIGluIENvbXB1dGVyIFNjaWVuY2UsIGEgY29tYmluZWQgQ29tcHV0ZXIgU2NpZW5jZS9NYXRoZW1hdGljcyBjb25jZW50cmF0aW9uLCBhbmQgYSBtaW5vciBpbiBDb21wdXRlciBTY2llbmNlLiA8L3A+DQo8cD5EZXBhcnRtZW50IGZhY3VsdHkgaGF2ZSBhY3RpdmUgcmVzZWFyY2ggcHJvZ3JhbXMgYW5kIGhhdmUgYmVlbiBzdWNjZXNzZnVsIGluIGFjcXVpcmluZyBOU0YgZ3JhbnRzIHRvIHN1cHBvcnQgcmVzZWFyY2gsIGN1cnJpY3VsdW0gZGV2ZWxvcG1lbnQgYW5kIGVkdWNhdGlvbmFsIGluZnJhc3RydWN0dXJlIGFjdGl2aXRpZXMgaW4gY29tcHV0ZXIgc2NpZW5jZS4gU3R1ZGVudHMgd2hvIGNvbmNlbnRyYXRlIGluIENvbXB1dGVyIFNjaWVuY2UgaGF2ZSB0aGUgb3Bwb3J0dW5pdHkgdG8gd29yayBvbiByZXNlYXJjaCBwcm9qZWN0cyBib3RoIGR1cmluZyB0aGUgYWNhZGVtaWMgeWVhciBvciBkdXJpbmcgYSBzdW1tZXIuIEdyYWR1YXRlcyBvZiB0aGUgY29tcHV0ZXIgc2NpZW5jZSBwcm9ncmFtIGF0IENvbGdhdGUgZmluZCBtYW55IG9wcG9ydHVuaXRpZXMgb3BlbiBib3RoIGZvciBlbXBsb3ltZW50IGluIGNvbXB1dGVyLXJlbGF0ZWQgam9icyBvciBmb3IgZ3JhZHVhdGUgZWR1Y2F0aW9uLjwvcD4NCjwvdGQ+PC90cj4NCjx0cj4NCjx0ZD4NCjxjZW50ZXI+DQo8YnI+PGJyPg0KPGEgaHJlZj0icGVvcGxlLmh0bWwiPjxpbWcgaGVpZ2h0PTIwIHdpZHRoPTc1IHNyYz0iaW1nL3Blb3BsZS5naWYiIG9uTW91c2VPdmVyPSJzcmM9J2ltZy9wZW9wbGUyLmdpZiciIG9uTW91c2VPdXQ9InNyYz0naW1nL3Blb3BsZS5naWYnIiBhbHQ9IlBlb3BsZSIgPjwvYT4NCjxpbWcgc3JjPSJpbWcvYnVsbGV0LmdpZiI+IA0KPGEgaHJlZj0gImN1cnIuaHRtbCI+IDxpbWcgaGVpZ2h0PTIwIHdpZHRoPTExNyBzcmM9ImltZy9jdXJyaWN1bHVtLmdpZiIgb25Nb3VzZU92ZXI9InNyYz0naW1nL2N1cnJpY3VsdW0yLmdpZiciIG9uTW91c2VPdXQ9InNyYz0naW1nL2N1cnJpY3VsdW0uZ2lmJyIgYWx0PSJDdXJyaWN1bHVtIj48L2E+IA0KPGltZyBzcmM9ImltZy9idWxsZXQuZ2lmIj4gDQo8YSBocmVmPSAibGFicy5odG1sIj4gPGltZyBoZWlnaHQ9MjAgd2lkdGg9MTM2IHNyYz0iaW1nL2xhYm9yYXRvcmllcy5naWYiIG9uTW91c2VPdmVyPSJzcmM9J2ltZy9sYWJvcmF0b3JpZXMyLmdpZiciIG9uTW91c2VPdXQ9InNyYz0naW1nL2xhYm9yYXRvcmllcy5naWYnIiBhbHQ9IkxhYm9yYXRvcmllcyI+PC9hPiANCjxpbWcgc3JjPSJpbWcvYnVsbGV0LmdpZiI+DQo8YSBocmVmPSAiY29udGFjdC5odG1sIj4gPGltZyBoZWlnaHQ9MjAgd2lkdGg9MTMzIHNyYz0iaW1nL2NvbnRhY3RpbmZvLmdpZiIgb25Nb3VzZU92ZXI9InNyYz0naW1nL2NvbnRhY3RpbmZvMi5naWYnIiBvbk1vdXNlT3V0PSJzcmM9J2ltZy9jb250YWN0aW5mby5naWYnIiBhbHQ9IkNvbnRhY3QgSW5mbyI+PC9hPiANCjxpbWcgc3JjPSJpbWcvYnVsbGV0LmdpZiI+DQo8YSBocmVmPSAiYWN0aXZpdGllcy5odG1sIj4gPGltZyBoZWlnaHQ9MjAgd2lkdGg9MTAzIHNyYz0iaW1nL2FjdGl2aXRpZXMuZ2lmIiBvbk1vdXNlT3Zlcj0ic3JjPSdpbWcvYWN0aXZpdGllczIuZ2lmJyIgb25Nb3VzZU91dD0ic3JjPSdpbWcvYWN0aXZpdGllcy5naWYnIiBhbHQ9IkFjdGl2aXRpZXMiPjwvYT4NCjwvY2VudGVyPg0KPC90ZD48L3RyPg0KPC90YWJsZT4NCjwvY2VudGVyPg0KDQo8cD5Mb29raW5nIGZvciBhbiBvbGRlciB3ZWIgcGFnZT8gIFZpc2l0IG91ciA8YQ0KaHJlZj0ib2xkLmh0bWwiPnByZXZpb3VzPC9hPiB3ZWIgc2l0ZS48L3A+DQoNCjwvYm9keT4NCjwvaHRtbD4NCg==
+</textarea>
+<input type="submit" value="create page"/>  
+<input type="button" value="decode in place"
+  onclick="this.form.b64.value=b64Decode(this.form.b64.value)"/>
+</form>
+
+
+</body></html>

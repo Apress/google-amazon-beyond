@@ -1,0 +1,128 @@
+<html><head><title>WeatherMin.html</title>
+<script>
+var inIE=document.all != null; // IE6 or Mozilla
+
+/* weather report via http://www.capescience.com/webservices/globalweather/index.shtml */
+
+function doGetWeatherReportEnvelope(code){
+  var S='<?xml version="1.0" encoding="UTF-8"?>\n';
+  S+='<SOAP-ENV:Envelope';
+  S+='    SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+='    xmlns:ns0="capeconnect:GlobalWeather:GlobalWeather"';
+  S+='    xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+  S+='    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+  S+='    <SOAP-ENV:Body>';
+  S+='        <ns0:getWeatherReport>';
+  S+='            <code xsi:type="xsd:string">' +code+ '</code>';
+  S+='        </ns0:getWeatherReport>';
+  S+='    </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';  
+  return S;
+}
+
+function doGetWeatherReport(code){
+  return doSoapCall("http://live.capescience.com/ccx/GlobalWeather",
+                    "capeconnect:GlobalWeather:GlobalWeather#getWeatherReport",
+                  doGetWeatherReportEnvelope(code));
+}
+
+function doSoapCall(uri,soapAction,env){
+alert("doSoapCall");
+  try{
+    var xmlDoc=parseXML(env);
+    if(!confirm(toXML(xmlDoc)))return;
+    var xmlhttp=null; var doc=null;
+    if(inIE) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+    else xmlhttp=new XMLHttpRequest();
+    if(!xmlhttp)
+      return alert("doSoapCall("+soapAction+"): can't initialize xmlhttp object");
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+    xmlhttp.open('POST',uri,false);
+    xmlhttp.setRequestHeader("SOAPAction", soapAction)
+    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+    xmlhttp.send(env);
+    return xml2HtmlPage(xmlhttp.responseXML);
+  }catch(ex){alert("doSoapCall("+soapAction+") error: "+ex);}
+}
+
+function parseXML(str){
+  if(inIE){
+    var doc=new ActiveXObject("Microsoft.XMLDOM");
+    doc.loadXML(str);
+    return doc; // .documentElement;
+  }
+  return (new DOMParser()).parseFromString(str, "text/xml");
+}
+
+function toXML(x){
+  if(inIE)return x.xml;
+  if(!toXML.serializer)toXML.serializer=new XMLSerializer();
+  return toXML.serializer.serializeToString(x);
+}
+  
+var xml2HtmlStyle="margin-left:5;font-size:"+(inIE?12:8);
+var xml2HtmlStyleDiv="<div style='"+xml2HtmlStyle+"'>";
+
+/**
+  * xml2Html(node) trivially transforms an XML node into an XHTML
+  *  representation with reasonable indentation. See
+  * http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/java-binding.html
+  * for nodeTypes, e.g. 1==Element, 7=Processing Instruction, 3=Text
+**/
+function xml2Html(node){
+  if(null==node)return "";
+  if(node.nodeType == 3)  // a text node
+    return node.nodeValue;
+  var name=node.nodeName;
+  var S=xml2HtmlStyleDiv; 
+  if(node.nodeType == 7) // a processing instruction
+    return S+xmlPInode2Html(node)+"</div>";
+  if(node.nodeType == 9) // a top-level document.
+    return S+xml2HtmlNodeChildren(node)+"</div>";
+
+  S+="&lt;"+node.nodeName+xmlAttrs2Html(node.attributes)+"&gt;";
+  S+=xml2HtmlNodeChildren(node);  // recursion here
+  S+="&lt;/"+node.nodeName+"&gt;</div>";
+  return S;
+}
+function xml2HtmlNodeChildren(node){
+  var S="";
+  for(var C=node.firstChild;null!=C;C=C.nextSibling)S+=xml2Html(C);
+  return S;
+}
+function xmlPInode2Html(node){ // node.nodeType==7, PI node
+  var S="&lt;?"+node.nodeName+xmlAttrs2Html(node.attributes)+"?&gt;";
+  return S;
+}
+function xml2HtmlPage(node){ // top-level page output for an xml node
+  var S="<html><head><title>Generated Page</title></head><body>";
+  S+=xml2Html(node);
+  S+="</body></h"+"tml>";
+  return S;
+}
+
+function xmlAttrs2Html(atts){
+  var S="";
+  if(atts!=null)
+    for(var i=0;i<atts.length;i++)
+      S+=" "+atts[i].name+"='"+atts[i].value+"'";
+  return S;
+}
+
+function displayXML(doc,targetFrame) {
+  with(targetFrame) {
+    document.write(xml2HtmlPage(doc));
+    document.close();
+  }
+}
+</script></head><body>
+<form name="theForm" action="javascript:void" 
+  onSubmit="doGetWeatherReport(document.theForm.code.value)">
+Airport Code (e.g., JFK, KUCA) <input type="text" name="code" value="SYR"/>
+<a href="javascript:doGetWeatherReport(document.theForm.code.value)">getReport</a>
+</form>
+</body></html>

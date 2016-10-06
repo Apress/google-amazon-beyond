@@ -1,0 +1,99 @@
+C:...\wsbk\axis>java -cp XX org.apache.axis.wsdl.WSDL2Java
+    --package com.n_topus.DBS_RS resultSet.wsdl
+
+
+error message:
+ {http://n-topus.com/DBS}>doSQLResponse>table>tr already exists
+
+
+after fixing:
+
+------
+POST /axis/servlet/AxisServlet HTTP/1.0
+Content-Type: text/xml; charset=utf-8
+Accept: application/soap+xml, application/dime, multipart/related, text/*
+User-Agent: Axis/1.1
+Host: 127.0.0.1
+Cache-Control: no-cache
+Pragma: no-cache
+SOAPAction: "DBServerCall"
+Content-Length: 451
+Authorization: Basic dGptOnRqbQ==
+
+<?xml version="1.0" encoding="UTF-8"?>
+   <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> 
+      <soapenv:Body>  
+         <doSQLRequest xmlns="http://n-topus.com/DBS">   
+            <DBServerCallParams xmlns="">    
+               <dbParam xsi:type="xsd:string">GETALL_AmaAuth</dbParam>   
+            </DBServerCallParams>  
+         </doSQLRequest> 
+      </soapenv:Body>
+   </soapenv:Envelope>
+---------
+
+HTTP/1.0 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: 923
+Date: Sun, 10 Aug 03 18:54:3 GMT
+Server: DBAuthService 0.11
+
+<?xml version='1.0' encoding='UTF-8'?>
+   <SOAP-ENV:Envelope    xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'   xmlns:xsd='http://www.w3.org/2001/XMLSchema'   xmlns:nns='http://n-topus.com/DBS'   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'> 
+      <SOAP-ENV:Body>  
+         <nns:doSQLResponse>
+            <table border='1'>
+               <tr>
+                  <th>Asin</th>
+                  <th>Author</th>
+               </tr>
+               <tr>
+                  <td>0156027321</td>
+                  <td>Yann Martel</td>
+               </tr>
+               <tr>
+                  <td>0393011836</td>
+                  <td>Robert L. Wolke</td>
+               </tr>
+               <tr>
+                  <td>0393047644</td>
+                  <td>Fareed Zakaria</td>
+               </tr>
+               <tr>
+                  <td>0465016154</td>
+                  <td>Hernando de Soto</td>
+               </tr>
+               <tr>
+                  <td>0465016154</td>
+                  <td>Hernando Desoto</td>
+               </tr>
+               <tr>
+                  <td>0465016154</td>
+                  <td>Hernando Soto</td>
+               </tr>
+               <tr>
+                  <td>0609610708</td>
+                  <td>Luigi Zingales</td>
+               </tr>
+               <tr>
+                  <td>0609610708</td>
+                  <td>Raghuram Rajan</td>
+               </tr>
+            </table>  
+         </nns:doSQLResponse> 
+      </SOAP-ENV:Body>
+   </SOAP-ENV:Envelope>
+---------
+result:
+
+Asin    Author
+0156027321      Yann Martel
+0393011836      Robert L. Wolke
+0393047644      Fareed Zakaria
+0465016154      Hernando de Soto
+0465016154      Hernando Desoto
+0465016154      Hernando Soto
+0609610708      Luigi Zingales
+0609610708      Raghuram Rajan
+Press any key to continue . . .
+

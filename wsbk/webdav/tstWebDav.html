@@ -1,0 +1,128 @@
+<html><head><title>tstWebDav.html</title></head><body>
+<script>
+var inIE=(document.all)?true:false;
+var showCallRequest=true;
+var showCallResponse=true;
+
+function putXMLFile(uri,env){
+  try{
+    var xmlDoc=parseXML(env);
+    if(showCallRequest)displayXML(xmlDoc,parent.callFrame);
+    var xmlhttp=null; var doc=null;
+    if(inIE) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+    else xmlhttp=new XMLHttpRequest();
+    if(!xmlhttp)
+      return alert("putXMLFile("+uri+"): can't initialize xmlhttp object");
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+    xmlhttp.open('PUT',uri,false);
+    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+    xmlhttp.send(env);
+    var result=xmlhttp.responseXML;
+    if(showCallResponse)displayXML(result,parent.responseFrame);
+    return xmlhttp.responseXML;
+  }catch(ex){alert("putXMLFile("+uri+") error: "+ex);}
+  return null;
+}
+function delFile(uri){
+  try{
+    var xmlhttp=null; var doc=null;
+    if(inIE) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+    else xmlhttp=new XMLHttpRequest();
+    if(!xmlhttp)
+      return alert("delFile("+uri+"): can't initialize xmlhttp object");
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+    xmlhttp.open('DELETE',uri,false);
+    xmlhttp.send("");
+    var result=xmlhttp.responseXML;
+    if(showCallResponse)displayXML(result,parent.responseFrame);
+    return xmlhttp.responseXML;
+  }catch(ex){alert("delFile("+uri+") error: "+ex);}
+  return null;
+}
+var xml2HtmlStyle="margin-left:5;font-size:"+(inIE?12:8);
+var xml2HtmlStyleDiv="<div style='"+xml2HtmlStyle+"'>";
+
+/**
+  * xml2Html(node) trivially transforms an XML node into an XHTML
+  *  representation with reasonable indentation. See
+  * http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/java-binding.html
+  * for nodeTypes, e.g. 1==Element, 7=Processing Instruction, 3=Text
+**/
+function xml2Html(node){
+  if(null==node)return "";
+  if(node.nodeType == 3)  // a text node
+    return node.nodeValue;
+  var name=node.nodeName;
+  var S=xml2HtmlStyleDiv; 
+  if(node.nodeType == 7) // a processing instruction
+    return S+xmlPInode2Html(node)+"</div>";
+  if(node.nodeType == 9) // a top-level document.
+    return S+xml2HtmlNodeChildren(node)+"</div>";
+
+  S+="&lt;"+node.nodeName+xmlAttrs2Html(node.attributes)+"&gt;";
+  S+=xml2HtmlNodeChildren(node);  // recursion here
+  S+="&lt;/"+node.nodeName+"&gt;</div>";
+  return S;
+}
+function xml2HtmlNodeChildren(node){
+  var S="";
+  for(var C=node.firstChild;null!=C;C=C.nextSibling)S+=xml2Html(C);
+  return S;
+}
+function xmlPInode2Html(node){ // node.nodeType==7, PI node
+  var S="&lt;?"+node.nodeName+xmlAttrs2Html(node.attributes)+"?&gt;";
+  return S;
+}
+function xml2HtmlPage(node){ // top-level page output for an xml node
+  var S="<html><head><title>Generated Page</title></head><body>";
+  S+=xml2Html(node);
+  S+="</body></h"+"tml>";
+  return S;
+}
+
+function xmlAttrs2Html(atts){
+  var S="";
+  if(atts!=null)
+    for(var i=0;i<atts.length;i++)
+      S+=" "+atts[i].name+"='"+atts[i].value+"'";
+  return S;
+}
+
+function displayXML(doc,targetFrame) {
+  with(targetFrame) {
+    document.write(xml2HtmlPage(doc));
+    document.close();
+  }
+}
+
+function toXML(x){
+  if(inIE)return x.xml;
+  if(!toXML.serializer)toXML.serializer=new XMLSerializer();
+  return toXML.serializer.serializeToString(x);
+}
+function parseXML(str){
+  if(inIE){
+    var doc=new ActiveXObject("Microsoft.XMLDOM");
+    doc.loadXML(str);
+    return doc; // .documentElement;
+  }
+  return (new DOMParser()).parseFromString(str, "text/xml");
+}
+</script>
+<form>
+<input type="button" value="sendIt" onclick="with(this.form)putXMLFile(fname.value,ta.value)"/>
+<input type="button" value="deleteIt" onclick="with(this.form)delFile(fname.value)"/>
+<input type="text" name="fname" size="30" value="http://localhost:8080/webdav/blah.xml"/>
+<textarea name="ta" rows="7" cols="100">
+  <now>
+    <is the="time">for</is>
+    <all><good>men</good></all>
+    <to><come to="the aid"><of>the party</of></come></to>
+   </now>
+</textarea>
+</form>
+</body></html>

@@ -1,0 +1,47 @@
+<html><head><title>ntopuRRS.html</title>
+<script>
+function showHTML(form){
+ try{
+  document.getElementById("descriptionDiv").innerHTML=""+form.description.value;
+ }catch(ex){alert("error in description textarea:"+ex);}
+ try{
+  document.getElementById("taDiv").innerHTML=""+form.ta.value;
+ }catch(ex){alert("error in page textarea:"+ex);}
+}
+function fmtDate(){
+ var d=new Date();
+ return (d.getFullYear()+"_"+(1+d.getMonth())+"_"+d.getDate());
+}
+</script>
+</head><body onload="showHTML(document.theForm)">
+<form name="theForm" action="addItem.jsp" method="POST">
+<table borders="1">
+<tr><td>user</td><td><input type="text" name="user" size="20" value="adn"/></td></tr>
+<tr><td>pw</td><td><input type="password" name="pw" size="10"/></td></tr>
+<tr><td>title</td><td><input type="text" name="title" size="80"/></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td colspan="2">
+  <textarea rows="2" cols="70" name="description">A <em>brief</em> description. </textarea></td></tr>
+<tr><td colspan="2">
+<textarea rows="10" cols="70" name="ta"><b>Here</b> goes the actual content of the page for <a
+ href="http://csproj.colgate.edu:8080/wsbk/ntopuRSS/feed.jsp">csproj</a> to report.
+ <ul>
+  <li>Fill in your username and password and the title, easy. </li>
+  <li>Fill in the description; can be HTML </li>
+  <li>Fill in the bigger textarea; it will be your page's body.</li>
+  <li>click the test button to see appearance; when it's okay, submit</li>
+  <li>if it doesn't work, try again.</li>
+  <li>look at http://csproj.colgate.edu:8080/wsbk/ntopuRSS/feed.jsp</li>
+  <li>copy the link into the address bar, see your page.</li>
+ </ul>
+</textarea></td></tr>
+</table>
+<input type="button" value="testPage" onclick="showHTML(this.form)"/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <input type="submit"/>
+</form>
+<h4>description:</h4>
+<div id="descriptionDiv" style="color:purple">descdesc</div>
+<h4>page:</h4>
+<div id="taDiv" style="color:purple">tata</div>
+</body></html>

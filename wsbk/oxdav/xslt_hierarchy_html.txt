@@ -1,0 +1,44 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta content="HTML Tidy, see www.w3.org" name="generator">
+<title>Testing oxdav</title>
+</head>
+<body>
+<div class="div_h1" id="divs" style="margin:10">
+<h1>
+<a href="#s" name="s">_</a>Top Header</h1>
+<span class="textCollection">Top-level text, <br> including <em>emphasized</em> text, with links to <a href="http://www.google.com">google</a> and to the local <a href="http://localhost:8080/oxdav/res/openXMLhelp.htm">help file</a>. </span>
+<div class="div_h2" id="divs_1" style="margin:10">
+<h2>
+<a href="#s_1" name="s_1">_</a>Section 1</h2>
+<span class="textCollection">part of section 1. </span>
+<div class="div_h3" id="divs_1_1" style="margin:10">
+<h3>
+<a href="#s_1_1" name="s_1_1">_</a>Section 1.1</h3>
+<span class="textCollection">This is in section 1.1 </span>
+</div>
+<div class="div_h3" id="divs_1_2" style="margin:10">
+<h3>
+<a href="#s_1_2" name="s_1_2">_</a>Section 1.2</h3>
+<span class="textCollection">This is in section 1.2. </span>
+<div class="div_h4" id="divs_1_2_1" style="margin:10">
+<h4>
+<a href="#s_1_2_1" name="s_1_2_1">_</a>Section 1.2.1</h4>
+<span class="textCollection">This is in section 1.2.1. </span>
+</div>
+</div>
+</div>
+<div class="div_h2" id="divs_2" style="margin:10">
+<h2>
+<a href="#s_2" name="s_2">_</a>Section 2</h2>
+<span class="textCollection">This is in section 2. </span>
+<div class="div_h3" id="divs_2_3" style="margin:10">
+<h3>
+<a href="#s_2_3" name="s_2_3">_</a>Section 2.1</h3>
+<span class="textCollection">This is in section 2.1</span>
+</div>
+</div>
+</div>
+</body>
+</html>

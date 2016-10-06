@@ -1,0 +1,124 @@
+Martin Streicher, Editorial Director wrote:
+
+>
+> Let me see if I can answer your questions...
+>
+> First, would I like it if you could brag that your code works on all of the platforms (Mac OS X, Linux, Windows)? Sure. That would be great. In reading the book, I did not see too much that wasn't inherently cross-platform, but if you specifically wanted to cover how to set up the development environment on each platform, that couldn't hurt. I suppose the database stuff might be the trickiest, but even MySQL is part of Mac OS X (I think).
+
+
+?I should have thought of that -- it seems to be true for the Server:
+
+> http://developer.apple.com/internet/macosx/osdb.html
+> Mac OS X: MySQL on Mac OS X
+>
+> If you're running Mac OS X Server, you are in luck -- MySQL is already
+> there. Just go to Applications/Utilities/MySQL Manager to access it.
+> If you are running Mac OS X, you'll have to install MySQL. You may
+> just want to run a binary installer. In that case, I can recommend...
+
+
+(In fact, I think I might refer to that specific article.)
+
+> a/ I would prefer if you used Linux in the generic sense. In fact, if you are going to use Mozilla on Linux, it's probably enough to mention the revision of Mozilla you're using. Or, perhaps you should use Netscape and Mozilla on Linux (which are virtually the same thing, although Firebird is probably superior.)
+
+
+I'm not sure what "Linux in the generic sense" means; would you actually
+like us to say "Unix" rather than "Linux"? I'll test it on Mandrake, when
+I get to it. Hm...
+
+  http://java.sun.com/j2se/1.4.2/download.html
+has Win & Lin, but for OS X you go to http://www.apple.com/java/ no prob.
+
+  http://www.mozilla.org/ has all 3 OSs (Lin needs "glibc2.2.4 or better");
+and we were using Moz 1.4, not Firebird;
+
+ I admit to being startled to see that
+  http://jakarta.apache.org/tomcat/tomcat-4.1-doc/RUNNING.txt
+says to install on "Unix" from the same zip file as Win, I don't see any rpm
+here any more, but I guess it shouldn't be an issue; anyway
+  http://developer.apple.com/internet/java/tomcat1.html
+seems to be pretty current for OS.X
+
+  http://www.mysql.com/downloads/mysql-4.0.html covers all OSs
+and
+ http://www.mysql.com/downloads/api-jdbc-stable.html (Connector/J for mysql)
+should have no problems on any of them;
+
+ http://sourceforge.net/projects/jtidy may have to be recompiled; it's very
+odd but I did find that when I did that with no changes I got rid of a
+weird error message, but there's no issue with different platforms;
+
+and I think that's all, except to copy two dozen .bat files as .sh, fix
+their ^M^J to be just ^J, change %s to $s for variables, and..umm...all of
+a sudden I don't recall how to say "pause" in a script. oh well, I wouldn't
+be doing that today anyway. But I guess I'll do that, and it's probably
+safe to say both "Linux" (unless you want to say "Unix") and "OS X" in
+advertising material...I just don't see how it could fail to be doable.
+In fact, right now I don't see how it could fail to be easy, which
+probably means I'm missing something big. :-)
+
+http://ws.apache.org/axis/
+
+tom
+
+
+
+
+>
+> b/ OS X would be great. I am not sure that the developer tools are even necessary, but if so, that's fine. They're free and easily acquired for registering with ADC.
+>
+>
+>
+> On Thursday, September 4, 2003, at 07:37 AM, Tom Myers wrote:
+>
+>> While mainly thinking about edits, it occurs to me that I
+>> should make a remark about cross-platform issues:
+>>
+>> All the code has been developed under Win2K/XP,
+>>   testing with both IE and Moz for browser stuff,
+>>   testing with MSWord and OpenOffice.org for WebDAV stuff
+>>   testing with very simple batch files for command-line stuff.
+>>
+>> We've been figuring that Linux would be even easier than it
+>> was for the last book, where we had to separate out the IIS/DLL
+>> stuff that was only for Windows; here the only issues should be
+>>   installation, and
+>>   a little editting from .bat to .sh
+>> Of course something will go wrong, it always does, but it
+>> _should_ be straightforward. Two questions:
+>>   (a) is there actually a problem with SCO issues? I certainly
+>> do propose to admit in print that I run Linux in my basement...
+>>   (b) would it be easy/worthwhile to do OS X as well? I do have
+>> an iMac available for this. I've never installed the developer's
+>> CD on it, but I did so on my daughter's iBook, and I've noticed
+>> that I can edit with vi on OS X. I believe everything's
+>> available, but I haven't actually looked; maybe there's a current
+>> tutorial or somebody who would identify probable gotchas in the
+>> soon-to-be-assembled appendices on installation, which will be
+>> expanded from
+>>
+>> > Appendix A: Installation Guide -- Windows:
+>> >   Install Mozilla (use IE if you really want). Install JDK 1.4.1+
+>> >   Now install Tomcat. Download Tidy. Install Axis. Install MySQL.
+>> >   Install our stuff. put your own keys into keys.js, &c.
+>> >      Notice where to start up DBService
+>> >     and DBAuthService and all those other batch files.
+>> > Appendix B: Installation Guide -- Linux
+>> >   The same except don't bother about IE.
+>> >   The batch files should be about the same except
+>> >     where they say "pause", and variables aren't %blah% anymore.
+>>
+>> I presume that OS X is not going to have troubles here, indeed the
+>> same very-vanilla *.sh files should work fine, but I don't know
+>> how much trouble this is going to be worth.
+>>
+>> tom
+>
+>
+>
+>
+
+
+
+
+

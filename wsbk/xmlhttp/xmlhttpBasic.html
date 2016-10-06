@@ -1,0 +1,86 @@
+<html><head><title>xmlhttp</title></head><body>
+<script src="../utils/key.js">/* var key = google key */</script>
+<script>
+var q="winkle wonkle";
+var start=0;
+var maxResults=1;
+
+function googleSearchEnvelope(key,q,start,maxResults){
+  var env='<?xml version="1.0" encoding="UTF-8"?>\n';;
+  env+='<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"';
+  env+='  xmlns:enc="http://schemas.xmlsoap.org/soap/encoding/"';
+  env+='  env:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"';
+  env+='  xmlns:xs="http://www.w3.org/1999/XMLSchema"';
+  env+='  xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance">';
+//  env+=' <env:Header/>';
+  env+=' <env:Body>';
+  env+='  <a0:doGoogleSearch xmlns:a0="urn:GoogleSearch">';
+  env+='   <key xsi:type="xs:string">'+key+'</key>';
+  env+='   <q xsi:type="xs:string">'+q+'</q>';
+  env+='   <start xsi:type="xs:int">'+start+'</start>';
+  env+='   <maxResults xsi:type="xs:int">'+maxResults+'</maxResults>';
+  env+='   <filter xsi:type="xs:boolean">1</filter>';
+  env+='   <restrict xsi:type="xs:string"/>';
+  env+='   <safeSearch xsi:type="xs:boolean">0</safeSearch>';
+  env+='   <lr xsi:type="xs:string"/>';
+  env+='   <ie xsi:type="xs:string">utf8</ie>';
+  env+='   <oe xsi:type="xs:string">utf8</oe>';
+  env+='  </a0:doGoogleSearch>';
+  env+=' </env:Body>';
+  env+='</env:Envelope>';
+  return env;
+}
+
+function googleSearch(key,q,start,maxResults){ alert("googleSearch");
+alert("googleSearch("+key+","+q+")");
+
+try{
+  var env=googleSearchEnvelope(key,q,start,maxResults);
+  var xmlhttp=null; var doc=null;
+  if(document.all) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+  else xmlhttp=new XMLHttpRequest();
+  if(!xmlhttp)return alert("googleSearch: cannot initialize xmlhttp object");
+  if(!document.all)netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+  xmlhttp.open('POST',"http://api.google.com/search/beta2",false);
+  xmlhttp.setRequestHeader("SOAPAction", "doGoogleSearch")
+  xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+  xmlhttp.send(env);
+  return xmlhttp.responseXML;
+}catch(ex){alert("googleSearch error: "+ex);}
+return null;
+
+}
+
+function GetXMLFile(sourceURL){ // from http://lists.w3.org/Archives/Public/www-dom-ts/2002Feb/0173.html
+    var xmlhttp = null;
+    var doc = null;
+    if (document.all) xmlhttp = new ActiveXObject('MSXML2.XMLHTTP');
+    else xmlhttp = new XMLHttpRequest();
+    if (xmlhttp) {
+      xmlhttp.open('GET', sourceURL, false);
+      xmlhttp.send(null);
+      doc = xmlhttp.responseXML;
+    }
+    return doc;
+}
+
+function toXML(x){
+  if(document.all)return x.xml;
+  if(!toXML.serializer)toXML.serializer=new XMLSerializer();
+  return toXML.serializer.serializeToString(x);
+}
+
+</script>
+This is a low-level API (xmlhttp) cross-browser approach to google's SOAP API.
+just fill in your query and the number of answers, and then look at the result.
+<form name="theForm" action="javascript:void">
+q:<input type="text" name="q" value="joe"/>
+N:<input type="text" name="N" value="5"/>
+<input type="button" value="go" 
+  onclick="with(this.form){theResult.value=toXML(googleSearch(key,q.value,0,N.value));}"/>
+<br/>
+<textarea name="theResult" rows="20" cols="120">
+</textarea>
+
+</form>
+</body></html>

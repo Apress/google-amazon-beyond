@@ -1,0 +1,21 @@
+<html><head><title>xmlhttpFrameCtl.html</title></head><body>
+<script src="../utils/xmlhttp.js"></script>
+<script>
+  function airportCode(){
+    var ur='http://www.ar-group.com/Airport-Locator.asp?RequestCity=';
+    return ur+document.theForm.cityName.value;
+   }
+</script>
+This is a cross-browser invocation of capescience.com's weather service.
+just fill in your airport code (or look one up via 
+You will see both call and response.
+<form name="theForm" action="javascript:void">
+  City:<input type="text" name="cityName" value="Syracuse"/>
+  <a href="javascript:parent.location=airportCode()">lookup code for city</a>, then put in
+  Airport code:<input type="text" name="airportCode" value="SYR"/>
+
+<input type="button" value="getWeather" 
+  onclick="with(this.form){doGetWeatherReport(airportCode.value);}"/>
+
+</form>
+</body></html>

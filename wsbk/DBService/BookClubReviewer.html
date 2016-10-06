@@ -1,0 +1,449 @@
+<html><head><title>BookClubReviewer.html</title>
+<style>
+  div.resultDiv {color:purple;background:yellow}
+  p.productName,p.asin,p.releaseDate,p.price {background:aliceblue}
+  p.manufacturer,p.author {background:lightgray}
+  span.stars {color:green;background:lightblue}
+</style>
+</head><body>
+<script src="../utils/xmlhttp.js"></script>
+<script src="../utils/getDOMdata.js"></script>
+<script src="../utils/key.js"></script>
+<script>
+var inIE=document.all != null; // IE6 or Mozilla
+var formNames=["amaForm","createTablesForm","getAllValsForm","delValsForm",
+               "delProdRevsForm","theInsAmaAuthForm","getKeyValsForm",
+               "thePutProdRevsForm","theInsAmaBksForm","theForm","tAForm"];
+var commonForms=[0,2,3,6,7,10];
+function hideForm(fName){document[fName].style.display="none";}
+function showForm(fName){document[fName].style.display="block";}
+function hideAllForms(){
+  for(var i=1;i<formNames.length;i++)hideForm(formNames[i]);
+}
+function showCommonForms(){
+  hideAllForms();
+  for(var i=0;i<commonForms.length;i++)
+    showForm(formNames[commonForms[i]]);
+}
+function showAllForms(){
+  for(var i=1;i<formNames.length;i++)showForm(formNames[i]);
+}  
+
+function doSoapCall(uri,soapAction,env){
+  try{
+    var xmlhttp=null; var doc=null;
+    if(inIE)xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+    else xmlhttp=new XMLHttpRequest();
+    if(!xmlhttp)
+      return alert("doSoapCall("+soapAction+"): can't initialize xmlhttp object");
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+    xmlhttp.open('POST',uri,false);
+    xmlhttp.setRequestHeader("SOAPAction", soapAction)
+    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+    xmlhttp.send(env);
+    var resultOb=xmlhttp.responseXML;
+    document.tAForm.tA.value=toXML(resultOb);
+    return resultOb;
+  }catch(ex){alert("doSoapCall("+soapAction+") error: "+ex);}
+}
+
+function collectArgs(theForm){
+  var A=new Array();
+  A[0]=theForm.cmd.value;
+  var N=parseInt(theForm.N.value);
+  for(var i=1;i<=N;i++)
+    A[i]=theForm["arg"+i].value;
+  return A;
+}
+
+function doAmaKeyEnv(tok,keyw){
+  var ob={keyword:keyw,page:1,mode:'books',tag:'webservices-20',type:'heavy',
+          devtag:tok,format:'xml',version:'1.0'};
+  return doAmazonKeywordSearchEnvelope(ob);
+}
+function doAmazonKeywordSearchEnvelope(ob){ // token,keyword){
+  var S='<?xml version="1.0" encoding="UTF-8"?>\n';
+  S+='<SOAP-ENV:Envelope';
+  S+='   xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+='   xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
+  S+='   xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+  S+='   SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">';
+  S+='  <SOAP-ENV:Body>';
+  S+='    <namesp1:KeywordSearchRequest xmlns:namesp1="urn:PI/DevCentral/SoapService">';
+  S+='      <KeywordSearchRequest xsi:type="namesp1:KeywordRequest">';
+  S+='        <keyword >'+ob.keyword+'</keyword>';
+  S+='        <page >'+ob.page+'</page>';
+  S+='        <mode >'+ob.mode+'</mode>';
+  S+='        <tag >'+ob.tag+'</tag>';
+  S+='        <type >'+ob.type+'</type>';
+  S+='        <devtag >'+ob.devtag+'</devtag>';
+  S+='        <format >'+ob.format+'</format>';
+  S+='        <version >'+ob.version+'</version>';
+  S+='      </KeywordSearchRequest>';
+  S+='    </namesp1:KeywordSearchRequest>';
+  S+='  </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';
+  return S;
+}
+function doAmazonKeywordSearch(token,keyword){
+  return doSoapCall("http://soap.amazon.com/onca/soap",
+                    "KeywordSearchRequest",
+                    doAmaKeyEnv(token,keyword));
+}
+
+function showAmazonResultTable(keyword){
+ try{
+  var resultOb=doAmazonKeywordSearch(amazonToken,keyword);
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+    var res=resultOb.getElementsByTagName("return");
+    if(!res || res.length==0){
+      document.getElementById("theResultDiv").innerHTML= showError(resultOb);
+      return null;
+    }
+   resultOb= res.item(0);
+  document.getElementById("theResultDiv").innerHTML=showResultTable(keyword,resultOb);
+ }catch(ex){alert(ex);}
+}
+function showError(resOb){ 
+  var faultCode=getMessageData(resOb,"faultcode");
+  var faultString=getMessageData(resOb,"faultstring");
+  var detail=getMessageData(resOb,"detail");
+  var S="<h1>ERROR</h1><table>";
+  S+="<tr><td>faultCode=</td><td>"+faultCode+"</td></tr>\n";
+  S+="<tr><td>faultString=</td><td>"+faultString+"</td></tr>\n";
+  S+="</table><p>"+detail+"</p>\n";
+  alert("faultCode="+faultCode+"\nfaultString="+faultString+"\ndetail="+detail);
+  return S;
+}
+
+/**
+  * the onclick function automatically inserts the asin's db records for
+  * the AmaBks and AmaAuth table, and sets things up for a review.
+**/
+function f(i){
+  var dataRow,commentsRow,asin,url,prodName,relDate,authors,price,mfr,custrevs;
+  dataRow=document.getElementById('tr'+i);
+  commentsRow=document.getElementById('trx'+i);
+
+  var p=dataRow.cells[1].getElementsByTagName('p');
+  prodName=xmlEncode(p.item(0).firstChild.innerHTML);
+  url=p.item(0).firstChild.getAttribute('href');
+  asin=p.item(1).innerHTML;
+  relDate=p.item(2).innerHTML;
+  authors=new Array();
+  for(var i=3;i<p.length;i++)
+    authors[authors.length]=xmlEncode(p.item(i).innerHTML);
+  p=dataRow.cells[3].getElementsByTagName('p');
+  price=p.item(0).innerHTML;
+  mfr=xmlEncode(p.item(1).innerHTML);
+  custrevs=toText(commentsRow.cells[0]);
+  alert('name='+prodName+"\nasin="+asin+"\nurl="+url+"\nrelDate="+relDate+"\nauthors="+authors.join("\n")+"\nprice="+price+"\nmfr="+mfr+"\ncustRevs="+custrevs);
+  putAmaAuthList(asin,authors);
+  putAmaBks(asin,prodName,relDate,mfr,price,url);
+//  putProdRevs(asin,userId,rating,keywords,review);
+  var prF=document.thePutProdRevsForm;
+  prF.asin.value=asin;
+  prF.rating.value=3;
+  prF.keywords.value=prodName.split(" ").join(",");
+  document.tAForm.tA.value=custrevs;
+}
+
+function showResultTable(key,retOb){
+  var S="<h1>Searched for "+key+"</h1>\n";
+  S+="<table border='1'>\n";
+  var topDetails=retOb.getElementsByTagName("Details");
+  if(topDetails && topDetails.length > 0) {
+    var details=topDetails[0].getElementsByTagName("Details");
+    for(var i=0;i<details.length;i++)
+      S+=showDetailsAsRow(details[i],i);
+    }
+  S+="</table>";
+  return S;
+}
+
+function stars(nStr){
+  if(!nStr)return "";
+  try{
+    var S="";
+    for(var N=parseInt(nStr);N>0;N--)S+="*";
+    return S;
+  }catch(ex){alert(ex); return ex;}
+}
+
+function showDetailsAsRow(details,i){ 
+// initial version: return "<tr><td>"+xml2Html(details)+"</td></tr>\n";
+  var asin=getMessageData(details,'Asin');
+  var smallImgUrl=getMessageDataDefault(details, 'ImageUrlSmall','');
+  var largeImgUrl=getMessageDataDefault(details, 'ImageUrlLarge','');
+  var bookUrl=getMessageData(details, 'Url');
+  var productName=getMessageData(details,"ProductName");
+  var mfr=getMessageDataDefault(details,"Manufacturer",'');
+  var releaseDate=getMessageDataDefault(details,"ReleaseDate",'');
+  var price=getMessageDataDefault(details,"OurPrice",'');
+  var authors=details.getElementsByTagName("Author");
+  var custRevs=details.getElementsByTagName("CustomerReview");
+  var S="<tr id='tr"+i+"' >";
+  S+="<td><input type='button' value='X' onclick='f("+i+")'></td>";
+  S+="<td><p class='productName'><a href='"+bookUrl+"'>"+productName+"</a></p>";
+  S+="<p class='asin'>"+asin+"</p>";
+  S+="<p class='releaseDate'>"+releaseDate+"</p>";
+  for(var a=0;a<authors.length;a++){
+    var auth=authors[a]; 
+    S+="<p class='author'>"+auth.firstChild.nodeValue+"</p>";
+    }
+  S+="</td><td><a href='"+largeImgUrl+"'><img src='"+smallImgUrl+"'/></a></td>";
+  S+="<td><p class='price'>"+price+"</p><p class='manufacturer'>"+mfr+"</p></td>";
+  S+="</tr>\n";
+  S+="<tr id='trx"+i+"'><td colspan='4'>";
+  for(var i=0;i<custRevs.length;i++){
+    var rev=custRevs[i]; 
+    var rating=getMessageData(custRevs[i],"Rating");
+    var summary=getMessageData(custRevs[i],"Summary");
+    var comment=getMessageData(custRevs[i],"Comment");
+    S+="<p>\n<span class='stars'>"+stars(rating)+"</span>"+
+         "\n<b>"+summary+"</b>\n "+comment+"</p>\n";
+    }
+  S+="</td></tr>\n";
+  return S;
+}
+/* DBServerCall on 65432 */
+
+function doDBServerCallEnvelope(args){
+  var S='<?xml version="1.0" encoding="UTF-8"?>\n';
+  S+='<SOAP-ENV:Envelope';
+  S+='    SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+='    xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+  S+='    xmlns:nns="http://n-topus.com/DBS"';
+  S+='    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+  S+='    <SOAP-ENV:Body>';
+  S+='        <nns:DBServerCallParams>';
+  for(var i=0;i<args.length;i++)
+    S+='            <dbParam xsi:type="xsd:string">' +args[i]+ '</dbParam>';
+  S+='        </nns:DBServerCallParams>';
+  S+='    </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';  
+  return S;
+}
+
+function doDBServerCall(args){
+  var S="http://localhost:65432";
+  var resultOb= doSoapCall(S,
+                    "DBServerCall",
+                  doDBServerCallEnvelope(args));
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+
+  var res=resultOb.getElementsByTagName("doSQLResponse");
+  if(!res || res.length==0){
+    document.getElementById("theResultDiv").innerHTML= showError(resultOb);
+    return null;
+  }
+  resultOb= res.item(0);
+  var S=toXML(resultOb); 
+  document.getElementById("theResultDiv").innerHTML=S;
+  return false;
+}
+
+</script>
+
+<form name="amaForm" action="javascript:showAmazonResultTable(document.amaForm.keyword.value)">
+Amazon keyword search:<input type="text" name="keyword" value="Syracuse"/>
+<input type="button" value="getSearch" 
+  onclick="with(this.form){showAmazonResultTable(keyword.value);}"/>
+<input type="button" value="hideAll" 
+  onclick="hideAllForms()"/>
+<input type="button" value="showAll" 
+  onclick="showAllForms()"/>
+<input type="button" value="showCommon" 
+  onclick="showCommonForms()"/>
+</form>
+
+<script>
+function crTable(tableName){
+  doDBServerCall(["cr"+tableName]); return false;
+}
+function getAllTable(tableName){
+  doDBServerCall(["getAll_"+tableName]); return false;
+}
+function getTableKey(tableName,key){
+  doDBServerCall(["get_"+tableName,key]); return false;
+}
+function delTableKey(tableName,key){
+  doDBServerCall(["delete_"+tableName,key]); return false;
+}
+function insAmaAuth(asin,auth){
+  doDBServerCall(["ins_AmaAuth",asin,auth]); return false;
+}
+function putAmaAuth(asin,auth){
+ delTableKey("AmaAuth",asin);
+ return insAmaAuth(asin,auth);
+}
+function putAmaAuthList(asin,authList){
+ delTableKey("AmaAuth",asin);
+ for(var i=0;i<authList.length;i++)insAmaAuth(asin,authList[i]);
+ return false;
+}
+function insAmaBks(asin,prodName,relDate,mfr,price,url){
+  doDBServerCall(["ins_AmaBks",asin,prodName,relDate,mfr,price,url]);
+  return false;
+}
+function putAmaBks(asin,prodName,relDate,mfr,price,url){
+  delTableKey("AmaBks",asin);
+  return insAmaBks(asin,prodName,relDate,mfr,price,url);
+}
+function insProdRevs(asin,userId,rating,keywords,review){
+  var cmd="ins_prodRevs";
+  var au=asin+":"+userId;
+  var dTime=new Date().toGMTString();
+  doDBServerCall([cmd,au,asin,userId,dTime,rating,keywords,review]);
+  return false;
+}
+function putProdRevs(asin,userId,rating,keywords,review){
+  delTableKey("ProdRevs",asin+":"+userId);
+  return insProdRevs(asin,userId,rating,keywords,review);
+}
+function putProdRevsForm(){
+  var a,u,r,k,rev;
+  with(document.thePutProdRevsForm){
+    a=asin.value; u=userID.value;
+    r=rating.value; k=keywords.value;
+  }
+  with(document.tAForm){rev=tA.value;}
+  return putProdRevs(a,u,r,k,rev);
+}
+
+</script>
+
+<table border='1'><tr valign="top"><td>
+
+<form name="delValsForm" action="javascript:void(0)"
+  onSubmit="with(document.delValsForm){return delTableKey(tName.value,key.value);}">
+<table border="1">
+<tr><td>table</td>
+   <td><select size="1" name="tName">
+        <option selected value="AmaBks">AmaBks</option>
+        <option value="AmaAuth">AmaAuth</option>
+        </select></td></tr>
+<tr><td>asin</td><td><input type="text" name="key" value=""/></td></tr>
+</table>
+<input type="submit" value="del">
+</form>
+
+</td><td>
+<form name="getAllValsForm" action="javascript:void(0)" 
+  onSubmit="with(document.getAllValsForm){return getAllTable(tName.value);}">
+<table border="1">
+<tr><td><select size="1" name="tName">
+        <option selected value="AmaBks"> AmaBks</option>
+        <option value="AmaAuth"> AmaAuth</option>
+        <option value="ProdRevs"> ProdRevs</option>
+       </select></td></tr>
+</table>
+<input type="submit" value="getAll">
+</form>
+</td>
+<td>
+<form name="delProdRevsForm" action="javascript:void(0)"
+  onSubmit="with(document.delProdRevsForm){return delTableKey('ProdRevs',asin.value+':'+user.value);}">
+<table border="1">
+<tr><td>asin</td><td><input type="text" name="asin" value=""/></td></tr>
+<tr><td>user</td><td><input type="text" name="user" value=""/></td></tr>
+</table>
+<input type="submit" value="delProdRev">
+</form>
+</td>
+<td>
+<form name="createTablesForm" action="javascript:void(0)" 
+  onSubmit="with(document.createTablesForm){return crTable(tName.value);}">
+<table border="1">
+<tr><td><select size="1" name="tName">
+        <option selected value="AmaBks">AmaBks</option>
+        <option value="AmaAuth">AmaAuth</option>
+        <option value="ProdRevs">ProdRevs</option>
+       </select></td></tr>
+</table>
+<input type="submit" value="create Table">
+</form>
+
+</td>
+</tr>
+<tr valign="top"><td>
+<form name="theInsAmaAuthForm" action="javascript:void(0)" 
+  onSubmit="with(document.theInsAmaAuthForm){return insAmaAuth(asin.value,auth.value);}">
+<table border="1">
+<tr><td>Asin</td><td><input type="text" name="asin" value=""></td></tr>
+<tr><td>Author</td><td><input type="text" name="auth" value=""></td></tr>
+</table>
+<input type="submit" value="insAmaAuth">
+</form>
+<form name="getKeyValsForm" action="javascript:void(0)" 
+  onSubmit="with(document.getKeyValsForm){return getTableKey(tName.value,asin.value);}">
+<table border="1">
+<tr><td><select size="1" name="tName">
+        <option selected value="AmaBks"> AmaBks</option>
+        <option value="AmaAuth"> AmaAuth</option>
+        <option value="ProdRevs"> ProdRevs</option>
+       </select></td></tr>
+<tr><td>asin</td><td><input type="text" size="10" value="" name="asin"/></td></tr>
+</table>
+<input type="submit" value="getByAsin">
+</form>
+
+</td>
+<td>
+<form name="thePutProdRevsForm" action="javascript:void(0)" 
+  onSubmit="return putProdRevsForm()">
+<table border="1">
+<tr><td>Asin</td><td><input type="text" name="asin" value=""></td></tr>
+<tr><td>UserID</td><td><input type="text" name="userID" value=""></td></tr>
+<tr><td>Rating</td><td><input type="text" name="rating" value=""></td></tr>
+<tr><td>Keywords</td><td><input type="text" name="keywords" value=""></td></tr>
+</table>
+<input type="submit" value="putProdRev">
+</form>
+(Put review in textarea below.)
+</td>
+<td><form name="theInsAmaBksForm" action="javascript:void(0)" 
+  onSubmit="with(document.theInsAmaBksForm){return insAmaBks(asin.value,prod.value,relDate.value,mfr.value,price.value,url.value);}">
+<table border="1">
+<tr><td>Asin</td><td><input type="text" name="asin" value=""></td></tr>
+<tr><td>ProductName</td><td><input type="text" name="prod" value=""></td></tr>
+<tr><td>ReleaseDate</td><td><input type="text" name="relDate" value=""></td></tr>
+<tr><td>Manufacturer</td><td><input type="text" name="mfr" value=""></td></tr>
+<tr><td>OurPrice</td><td><input type="text" name="price" value=""></td></tr>
+<tr><td>Url</td><td><input type="text" name="url" value=""></td></tr>
+</table>
+<input type="submit" value="insAmaBk">
+</form>
+</td><td>
+<form name="theForm" action="javascript:void(0)" 
+  onSubmit="return doDBServerCall(collectArgs(document.theForm))">
+<table border="1">
+<tr><td>cmd</td><td><input type="text" name="cmd" value="getAll_AmaAuth"></td></tr>
+<tr><td>argCount</td><td><input type="text" name="N" value="0"></td></tr>
+<tr><td>arg1</td><td><input type="text" name="arg1" value=""></td></tr>
+<tr><td>arg2</td><td><input type="text" name="arg2" value=""></td></tr>
+<tr><td>arg3</td><td><input type="text" name="arg3" value=""></td></tr>
+<tr><td>arg4</td><td><input type="text" name="arg4" value=""></td></tr>
+<tr><td>arg5</td><td><input type="text" name="arg5" value=""></td></tr>
+<tr><td>arg6</td><td><input type="text" name="arg6" value=""></td></tr>
+<tr><td>arg7</td><td><input type="text" name="arg7" value=""></td></tr>
+</table>
+<input type="button" value="setDate" onclick="this.form.arg5.value=new Date().toGMTString()"/>
+<input type="submit" value="doIt">
+</form>
+</td></tr></table>
+Reviews and XML responses:<br/>
+<form name="tAForm" action="javascript:void(0)">
+<textarea name="tA" rows="5" cols="100"></textarea>
+</form>
+<div id="theResultDiv" class="resultDiv">query results here</div>
+</body></html>

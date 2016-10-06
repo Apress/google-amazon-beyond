@@ -1,0 +1,47 @@
+<html><head><title>Amazon REST</title></head><body>
+<p>
+This form does an Amazon keyword search as a GET, with
+the (public) URL of an XSLT page as a parameter. The URL is to be:
+<pre>
+http://xml.amazon.com/onca/xml2
+      ?t=webservices-20
+      &dev-t=[developer’s token goes here]
+      &KeywordSearch=[subject keyword goes here]
+      &mode=[product line goes here]
+      &type=[lite or heavy]
+      &page=[page # goes here]
+      &f=[URL pointer to XSL document]  
+</pre>
+</p>
+<form METHOD="GET" action="http://xml.amazon.com/onca/xml2">
+<input type="hidden" name="t" value="webservices-20"/>
+<table border="1">
+<tr>
+  <td>developer's token: <em>Please</em> use your own!</td>
+  <td><input type="text" name="dev-t" value="D2Y0P98RA19J1K"/></td>
+</tr>
+<tr>
+  <td>keywords</td>
+  <td><input type="text" name="KeywordSearch" size="40" value="einstein cook"/></td>
+</tr>
+<tr>
+  <td>mode</td>
+  <td><input type="text" name="mode" value="books"/></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td><input type="text" name="type" value="lite"/></td>
+</tr>
+<tr>
+  <td>page</td>
+  <td><input type="text" name="page" value="1"/></td>
+</tr>
+<tr>
+  <td>"xml", or XSL page URL</td>
+  <td><input type="text" name="f" size="40" value="http://www.n-topus.com/xslt/AmaGet01.xsl"/></td>
+</tr>
+</table>
+<input type="submit" value="search"/>
+</form>
+
+</body></html>

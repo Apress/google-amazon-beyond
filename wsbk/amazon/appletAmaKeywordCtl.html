@@ -1,0 +1,68 @@
+<html><head><title>appletAmaKeywordCtl.html</title>
+<applet name="XmlHttp" height="2" width="2" code="soapUtil/SoapApplet.class" >
+</applet>
+
+</head><body>
+<script src="../utils/key.js">/* included for amazonToken */</script>
+<script src="../utils/xmlhttp.js">/* included for parseXML and xml2Html */</script>
+<script>
+function doAmazonKeywordSearch(token,keyword){
+   alert("dks("+token+","+keyword+")");
+  var res=document.XmlHttp.sendSoap(
+              "http://soap.amazon.com/onca/soap",
+              "KeywordSearchRequest",
+              doAmazonKeywordSearchEnvelope(token,keyword));
+  var ob=parseXML(res);
+  res=xml2Html(ob);
+  with(parent.dataFrame)
+    {document.write(res);document.close();}
+}
+
+function doAmazonKeywordSearchEnvelope(token,keyword){
+  var S='<?xml version="1.0" encoding="UTF-8"?>\n';
+  S+='<SOAP-ENV:Envelope';
+  S+='   xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+='   xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
+  S+='   xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+  S+='   SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">';
+  S+='  <SOAP-ENV:Body>';
+  S+='    <namesp1:KeywordSearchRequest xmlns:namesp1="urn:PI/DevCentral/SoapService">';
+  S+='      <KeywordSearchRequest xsi:type="namesp1:KeywordRequest">';
+  S+='        <keyword >'+keyword+'</keyword>';
+  S+='        <page >1</page>';
+  S+='        <mode >books</mode>';
+  S+='        <tag >webservices-20</tag>';
+  S+='        <type >lite</type>';
+  S+='        <devtag >'+token+'</devtag>';
+  S+='        <format >xml</format>';
+  S+='        <version >1.0</version>';
+  S+='      </KeywordSearchRequest>';
+  S+='    </namesp1:KeywordSearchRequest>';
+  S+='  </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';
+  return S;
+}
+/* here was the Javascript version, asking permission through browser:
+
+function doAmazonKeywordSearch(token,keyword){
+  alert("doAmazonKeywordSearch("+keyword+")");
+  return doSoapCall("http://soap.amazon.com/onca/soap",
+                    "KeywordSearchRequest",
+                  doAmazonKeywordSearchEnvelope(token,keyword));
+}
+*/ 
+
+</script>
+This is an applet-based cross-browser invocation of amazon's keyword search.
+You will see the response,but not the call. The response-formatting is
+done in Javascript, because our Java usage is not actually using any DOM at
+all: we simply send a string to Amazon, and get a string back.
+<form name="theForm" action="javascript:void">
+  keyword:<input type="text" name="keyword" value="Harry Potter"/>
+<input type="button" value="getSearch" 
+  onclick="doAmazonKeywordSearch(amazonToken,this.form.keyword.value);"/>
+<input type="button" value="version" 
+  onclick="with(this.form){alert(document.XmlHttp.version());}"/>
+</form>
+</body></html>

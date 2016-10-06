@@ -1,0 +1,163 @@
+<html><head><title>DBServerMin.html</title>
+<script src="../utils/xmlhttp.js"></script>
+<script>
+var inIE=document.all != null; // IE6 or Mozilla
+
+/* DBServerCall on 65432 */
+
+function doDBServerCallEnvelope(args){
+  var S='<?xml version="1.0" encoding="UTF-8"?>\n';
+  S+='<SOAP-ENV:Envelope';
+  S+='    SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+='    xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+  S+='    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+  S+='    <SOAP-ENV:Body>';
+  S+='        <DBServerCallParams>';
+  for(var i=0;i<args.length;i++)
+    S+='            <dbParam xsi:type="xsd:string">' +args[i]+ '</dbParam>';
+  S+='        </DBServerCallParams>';
+  S+='    </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';  
+  return S;
+}
+
+function doDBServerCall(args){;
+  var S="http://localhost:65432/bizzle/fizzle/org.htm?a="+
+                        escape(",bi @#&zip")+"&b="+escape("ba\t%\\r&zap");
+  alert(S);
+  return doSoapCall(S,
+                    "DBServerCall",
+                  doDBServerCallEnvelope(args));
+}
+
+function doSoapCall(uri,soapAction,env){
+  try{
+    var xmlDoc=parseXML(env);
+    if(!confirm(toXML(xmlDoc)))return;
+    var xmlhttp=null; var doc=null;
+    if(inIE) xmlhttp=new ActiveXObject('MSXML2.XMLHTTP');
+    else xmlhttp=new XMLHttpRequest();
+    if(!xmlhttp)
+      return alert("doSoapCall("+soapAction+"): can't initialize xmlhttp object");
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+    xmlhttp.open('POST',uri,false);
+    xmlhttp.setRequestHeader("SOAPAction", soapAction)
+    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8")
+    xmlhttp.send(env);
+    alert("soapCall sent");
+    alert("responseXML=\n"+toXML(xmlhttp.responseXML));
+    var res=xmlhttp.responseXML.getElementsByTagName("doSQLResponse");
+    if(res.length==0)return alert("no response from service");
+    document.getElementById("theResultDiv").innerHTML=toXML(res.item(0));
+    return;
+if(true){document.getElementById("theResultDiv").innerHTML=toXML(xmlhttp.responseXML.getElementsByTagName("doSQLResponse")); return;}
+    document.write( xml2HtmlPage(xmlhttp.responseXML));
+    document.close();
+  }catch(ex){alert("doSoapCall("+soapAction+") error: "+ex);}
+}
+
+function parseXML(str){
+  if(inIE){
+    var doc=new ActiveXObject("Microsoft.XMLDOM");
+    doc.loadXML(str);
+    return doc; // .documentElement;
+  }
+  return (new DOMParser()).parseFromString(str, "text/xml");
+}
+/*
+function toXML(x){
+  if(inIE){alert(x.xml); return x.xml;}
+  if(!toXML.serializer)toXML.serializer=new XMLSerializer();
+  var S= toXML.serializer.serializeToString(x);
+  alert(S);
+  return S;
+}
+*/
+
+var xml2HtmlStyle="margin-left:5;font-size:"+(inIE?12:8);
+var xml2HtmlStyleDiv="<div style='"+xml2HtmlStyle+"'>";
+
+/**
+  * xml2Html(node) trivially transforms an XML node into an XHTML
+  *  representation with reasonable indentation. See
+  * http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/java-binding.html
+  * for nodeTypes, e.g. 1==Element, 7=Processing Instruction, 3=Text
+**/
+function xml2Html(node){
+  if(null==node)return "";
+  if(node.nodeType == 3)  // a text node
+    return node.nodeValue;
+  var name=node.nodeName;
+  var S=xml2HtmlStyleDiv; 
+  if(node.nodeType == 7) // a processing instruction
+    return S+xmlPInode2Html(node)+"</div>";
+  if(node.nodeType == 9) // a top-level document.
+    return S+xml2HtmlNodeChildren(node)+"</div>";
+
+  S+="&lt;"+node.nodeName+xmlAttrs2Html(node.attributes)+"&gt;";
+  S+=xml2HtmlNodeChildren(node);  // recursion here
+  S+="&lt;/"+node.nodeName+"&gt;</div>";
+  return S;
+}
+function xml2HtmlNodeChildren(node){
+  var S="";
+  for(var C=node.firstChild;null!=C;C=C.nextSibling)S+=xml2Html(C);
+  return S;
+}
+function xmlPInode2Html(node){ // node.nodeType==7, PI node
+  var S="&lt;?"+node.nodeName+xmlAttrs2Html(node.attributes)+"?&gt;";
+  return S;
+}
+function xml2HtmlPage(node){ // top-level page output for an xml node
+  var S="<html><head><title>Generated Page</title></head><body>";
+  S+=xml2Html(node);
+  S+="</body></h"+"tml>";
+  return S;
+}
+
+function xmlAttrs2Html(atts){
+  var S="";
+  if(atts!=null)
+    for(var i=0;i<atts.length;i++)
+      S+=" "+atts[i].name+"='"+atts[i].value+"'";
+  return S;
+}
+
+function displayXML(doc,targetFrame) {
+  with(targetFrame) {
+    document.write(xml2HtmlPage(doc));
+    document.close();
+  }
+}
+function collectArgs(theForm){
+  var A=new Array();
+  A[0]=theForm.cmd.value;
+  var N=parseInt(theForm.N.value);
+  for(var i=1;i<=N;i++)
+    A[i]=theForm["arg"+i].value;
+  return A;
+}
+</script></head><body>
+<form name="theForm" action="javascript:void(0)" 
+  onSubmit="doDBServerCall(collectArgs(document.theForm))">
+<table border="1">
+<tr><td>cmd</td><td><input type="text" name="cmd" value="getAssociations"></td></tr>
+<tr><td>argCount</td><td><input type="text" name="N" value="0"></td></tr>
+<tr><td>arg1</td><td><input type="text" name="arg1" value=""></td></tr>
+<tr><td>arg2</td><td><input type="text" name="arg2" value=""></td></tr>
+<tr><td>arg3</td><td><input type="text" name="arg3" value=""></td></tr>
+<tr><td>arg4</td><td><input type="text" name="arg4" value=""></td></tr>
+<tr><td>arg5</td><td><input type="text" name="arg5" value=""></td></tr>
+<tr><td>arg6</td><td><input type="text" name="arg6" value=""></td></tr>
+<tr><td>arg7</td><td><input type="text" name="arg7" value=""></td></tr>
+<tr><td>theDate</td><td><input type="text" name="theDate" value=""</td></tr>
+</table>
+<input type="button" value="setDate" onclick="this.form.theDate.value=new Date().toGMTString()"/>
+<input type="submit" value="doIt">
+</form>
+<div id="theResultDiv">result goes here</div>
+</body></html>

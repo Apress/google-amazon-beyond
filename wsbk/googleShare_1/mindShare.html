@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+          "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Google Calculations</title>
+<script src="../utils/key.js"> </script>
+<script src="../utils/xmlhttp.js"> </script>
+<script src="../utils/getDOMdata.js"> </script>
+<script type="text/javascript">
+function findMindShare(who,what){
+//  var whoNum=gsGetCount(who);
+  var whatNum=gsGetCount(what);
+  var whoWhatNum=gsGetCount(who+" "+what);
+  return makePercent(whoWhatNum / whatNum);
+}
+function makePercent(num){ // e.g., .0010 becomes .10; 
+ var S= ""+(num*100); 
+ var decPoint=S.indexOf(".");
+ if(decPoint<0)return S;
+ return S.substring(0,6+decPoint); // truncated, not rounded.
+}  
+</script>
+<link rel="stylesheet" type="text/css" href="google.css">
+</head>
+<body>
+<p><code>mindShare = WhoWhatCount/whatCount</code></p>
+<p>100% if "what" is always associated
+with "who", 0% if it never is.</p>
+<div style="float: right">
+  <a href="http://www.google.com/apis/" target="_top">
+  API
+</a></div>
+
+<form name="theForm" action="javascript:void">
+Who: <input type="text" name="who" value="einstein">
+What: <input type="text" name="what" value="relativity">
+mindshare: <input type="text" name="mindshare"/>
+<input type="button"  
+  onclick=
+    "with(this.form)
+      {mindshare.value=findMindShare(who.value,what.value);}"
+  value="findMindShare">
+</form>
+
+</body></html>

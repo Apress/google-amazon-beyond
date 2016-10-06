@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.4.1_02" class="java.beans.XMLDecoder"> 
+ <object class="soapUtil.DBService"> 
+   <void method="setDbURL">
+     <string>jdbc:mysql://localhost/openXML</string>
+   </void>
+   <void method="setDbDriver">
+     <string>com.mysql.jdbc.Driver</string>
+   </void>
+   <void method="setDbUser">
+     <string>tjm</string>
+   </void>
+   <void method="setDbPwd">
+     <string>tjm</string>
+   </void>
+   <void method="setPortNumber">
+     <int>65432</int>
+   </void>
+   <void method="setQueryStrings">
+     <object class="java.util.ArrayList">
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>crAmaBks</string></void>
+               <void method="setQStr">
+ <string>CREATE TABLE AmaBks (Asin INT PRIMARY KEY, URL TEXT,ProductName TEXT,ReleaseDate TEXT,Manufacturer TEXT,OurPrice TEXT)</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>crAmaAuth</string></void>
+               <void method="setQStr">
+                   <string>CREATE TABLE AmaAuth (Asin INT PRIMARY KEY, Author TEXT)</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>insAmaAuth</string></void>
+               <void method="setQStr">
+                   <string>INSERT INTO AmaAuth (Asin,Author) VALUES (?,?)</string></void>
+               <void method="setQTypes"><string>INT,TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>insAmaBks</string></void>
+               <void method="setQStr">
+<string>INSERT INTO AmaBks (Asin,Url,ProductName,ReleaseDate,Manufacturer,OurPrice) VALUES (?,?,?,?,?,?)</string></void>
+               <void method="setQTypes"><string>INT,TEXT,TEXT,TEXT,TEXT,TEXT</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>getTopics</string></void>
+               <void method="setQStr"><string>SELECT * FROM topics</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>getTopics</string></void>
+               <void method="setQStr"><string>SELECT * FROM topics</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>getAssociations</string></void>
+               <void method="setQStr"><string>SELECT * FROM associations</string></void>
+               <void method="setQTypes"><string></string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>addAssociation</string></void>
+               <void method="setQStr"><string>INSERT INTO associations VALUES (?,?,?)</string></void>
+               <void method="setQTypes"><string>STRING,STRING,STRING</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>getPartString</string></void>
+               <void method="setQStr"><string>SELECT * FROM parts WHERE PartValue LIKE ?</string></void>
+               <void method="setQTypes"><string>STRING</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>getRange</string></void>
+               <void method="setQStr"><string>SELECT * FROM Phones WHERE NAM &gt;= ? AND NAM &lt;= ?</string></void>
+               <void method="setQTypes"><string>STRING,STRING</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>add</string></void>
+               <void method="setQStr"><string>INSERT INTO Phones VALUES (?,?,?)</string></void>
+               <void method="setQTypes"><string>STRING,STRING,STRING</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>changeAddr</string></void>
+               <void method="setQStr"><string>UPDATE Phones SET Addr=? WHERE NAM=?</string></void>
+               <void method="setQTypes"><string>STRING,STRING</string></void>
+            </object>
+        </void>
+        <void method="add">
+            <object class="soapUtil.DBQueryData">
+               <void method="setQID"><string>delPhone</string></void>
+               <void method="setQStr"><string>DELETE FROM Phones WHERE NAM=?</string></void>
+               <void method="setQTypes"><string>STRING</string></void>
+            </object>
+        </void>
+     </object>
+   </void>
+ </object>
+</java>

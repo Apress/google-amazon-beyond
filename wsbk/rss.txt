@@ -1,0 +1,34 @@
+sometimes no title at all
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_3.html
+Fri May 09 09:51:54 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+hardly ever no title at all
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_4.html
+Fri May 09 09:52:35 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+This is not a title
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_5.html
+Fri May 09 11:48:34 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+There has never been a title
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_6.html
+Fri May 09 12:18:10 EDT 2003: A <em>lengthy</em> description of something else
+0123456789*9876543210
+DBServerMin.html
+file:///C:/Program%20Files/Apache%20Group/Tomcat%204.1/webapps/wsbk/DBService/DBServiceMin.html
+Thu May 22 10:42:35 EDT 2003: arg3
+arg4
+arg5
+0123456789*9876543210
+Burma Under Control (washingtonpost.com)
+http://www.washingtonpost.com/wp-dyn/articles/A24677-2003Jun23.html
+Tue Jun 24 16:23:53 EDT 2003: There was never a country called Burma until the British combined a bunch of warring ethnic groups and ruled them with an iron hand. Aung San, the father of Aung San Suu Kyi, is revered as the national leader who persuaded the British to grant independence after World War II. He was a Marxist and a Japanese collaborator,
+0123456789*9876543210
+News
+http://news.independent.co.uk/uk/politics/story.jsp?story=417546
+Tue Jun 24 16:24:22 EDT 2003: European Union leaders condemned Burma last night, expressing "grave concern" over developments in the country and calling on the Burmese authorities "immediately to release Daw Aung San Suu Kyi" and other members of the National League for Democracy.
+0123456789*9876543210
+Shirky: A Group Is Its Own Worst Enemy
+http://www.shirky.com/writings/group_enemy.html
+Fri Jul 04 14:58:44 EDT 2003: 
+0123456789*9876543210

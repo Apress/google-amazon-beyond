@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!-- A simple example (and this is a comment) -->
+<encounter>
+  <greeting>Hello, XML!</greeting>
+  <response>Hello, what can I do for you?</response>
+</encounter>

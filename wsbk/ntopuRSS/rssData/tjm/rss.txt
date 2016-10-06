@@ -1,0 +1,99 @@
+Protecting Our Health
+http://www.protectingourhealth.org/
+Thu Feb 13 12:56:26 EST 2003: NOTE: This site is in development.
+
+As of 1 January 2003, the sections across the top (Core Themes, Common Sense Steps, etc., all have representative content
+0123456789*9876543210
+Our Stolen Future: Home
+http://www.ourstolenfuture.org/
+Thu Feb 13 12:58:01 EST 2003: Sign up for an email alert about updates
+most recent update: 13 February 2003
+0123456789*9876543210
+O'Reilly Network: Quick and Dirty Topic Mapping [Feb. 04, 2002]
+http://www.oreillynet.com/pub/a/webservices/2002/01/01/topic_map.html?page=last#thread
+Fri Feb 21 10:30:31 EST 2003: . I've just been checking out the new version of Radio UserLand, for example, and it does a beautiful job with topics. You can easily create topics, tag one or more of them onto your postings, and even--this is wildly powerful--make each topic into its own RSS feed. You can't, however, abstract the mapping of resources to topics into some central and easily accessible place. Topic maps often need to evolve globally as the territory they survey changes. When you want to effect such change, it's ideal to have global access.
+0123456789*9876543210
+Protecting Our Health
+http://www.protectingourhealth.org/press/2003/2003-0306-WP-greenerhomes.htm
+Mon Mar 10 08:49:53 EST 2003: Washington Post
+
+As Natural as Breathing
+Clearing the Air With Eco-Friendly Home Products
+0123456789*9876543210
+MySQL Articles
+http://www.kitebird.com/articles/
+Wed Mar 12 08:29:38 EST 2003: The following are updates of articles originally written for NuSphere. (Several of them deal with MySQL programming in languages such as PHP, Python, and Java. If that's your interest, you might also want to have a look at MySQL Cookbook 
+0123456789*9876543210
+The New Republic Online: Truth Be Told
+http://www.tnr.com/doc.mhtml?i=20030324&s=trb032403
+Fri Mar 14 15:19:28 EST 2003: Absent some convincing explanation by the White House, the most plausible theory is that key officials in the Bush administration knew--or at least suspected--they were making false claims. And they made them anyway.
+
+By the time you read this column, the Bush administration may well have lost its bid for U.N. authorization for the war. If so, American officials and commentators will no doubt chalk up the defeat to anti-American suspicion among countries motivated by timidity, resentment, and pique. And they'll be partly correct. But it's worth noting that the suspicion isn't entirely irrational, given what Security Council members have witnessed over the past several months. If the Bush administration wanted to win the world's trust, it should have started by telling the truth.
+0123456789*9876543210
+American Politics Journal -- Pundit Pap
+http://americanpolitics.com/punditpap.html
+Mon Mar 17 14:00:34 EST 2003: tomorrow is a deadline for the UN Security Council to vote up or down on how to go forward on Iraq
+0123456789*9876543210
+
+http://www.ibphoenix.com/a425.htm
+Sun Apr 13 13:35:55 EDT 2003: Do you want to see a Firebird handbook published in English? If you do, tell the publishers! The US technical publisher APress has been considering a detailed Firebird book proposal since mid-October last year. It appears they don't think there is a market for it. If you disagree, why not contact APress? Send email to Martin Streicher or the editorial department and let them know what YOU want.
+0123456789*9876543210
+The Lemon - Interview: Nancy Pelosi
+http://www.thelemon.net/issues/story.php?interview_pelosi
+Fri Apr 18 18:02:36 EDT 2003: 
+0123456789*9876543210
+title
+/rss/rssData/adn/103_5_9
+Fri May 09 09:17:19 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+title
+/rss/rssData/adn/103_5_9_1.html
+Fri May 09 09:27:54 EDT 2003: An extremely <em>brief</em> description. 
+0123456789*9876543210
+
+a title
+/rss/rssData/adn/http://localhost:8080/wsbk/ntopuRSS/103_5_9_1.html
+Fri May 09 09:35:25 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+a title
+http://localhost:8080/wsbk/ntopuRSS/rss/rssData/adn/103_5_9_1.html
+Fri May 09 09:36:36 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+some  title
+http://localhost:8080/wsbk/ntopuRSS/rss/rssData/adn/103_5_9_1.html
+Fri May 09 09:37:37 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+never any  title
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_1.html
+Fri May 09 09:39:19 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+never any  title
+http://localhost:8080/wsbk/ntopuRSSntopuRSS/rssData/adn/103_5_9_1.html
+Fri May 09 09:40:17 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+never any  title
+http://localhost:8080/wsbk/ntopuRSS/ntopuRSS/rssData/adn/103_5_9_1.html
+Fri May 09 09:40:44 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+hardly ever any  title
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_1.html
+Fri May 09 09:41:52 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+hardly ever no title at all
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_1.html
+Fri May 09 09:42:18 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+
+hardly ever not no title at all
+http://localhost:8080/wsbk/ntopuRSS/rssData/adn/103_5_9_2.html
+Fri May 09 09:43:46 EDT 2003: A <em>brief</em> description. 
+0123456789*9876543210
+

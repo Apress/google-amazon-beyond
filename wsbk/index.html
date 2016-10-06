@@ -1,0 +1,274 @@
+<html><head><title>WSBK</title><body>
+<p>
+This is the 9-chapter initial version of the wsbk
+project index.html file, tested within IE6.0 and Mozilla 1.4.
+We place it in a Tomcat webapps directory, but the
+early examples may need to be started as file URIs, not via "http://localhost..."
+in order to bypass security constraints on downloaded pages. (This depends on
+your security configuration, of course.) Beginning with Chapter 4, running the
+code requires a database which by default is a MySQL database called wsbkdb;
+ you must install MySQL or edit our XML
+configuration files, changing "jdbc:mysql://localhost/wsbkdb" as appropriate,
+and possibly editting the SQL commands in those configuration files.
+The code of Chapter 4 runs on Windows by clicking our soapUtil/DBService.bat;
+you can initialize data tables within the browser client.  Chapters 5 and 6 use
+soapUtil/DBAuthService.bat similarly. Chapter 6 also requires an internet
+connection for examples which reach Amazon's web site or http://www.n-topus.com,
+and it further requires soapUtil/DBAuthService2.bat for its final example. 
+Chapter 9 is based on command-line Java invocations, each of which is shown
+for Windows users in a .bat file; Linux users should have no trouble adapting these.
+</p>
+<p>
+</p>
+<a name="chapList">Chapter Listing</a><br/>
+<table border="1">
+<tr><td ><a href="#c1">Chapter 1. The First Service</a></td></tr>
+<tr><td ><a href="#c2">Chapter 2. The Plumbing: DOM and SOAP</a></td></tr>
+<tr><td ><a href="#c3">Chapter 3. More Services, Java Applet</a></td></tr>
+<tr><td ><a href="#c4">Chapter 4. DBService and a Book Club</a></td></tr>
+<tr><td ><a href="#c5">Chapter 5. Authentication and REST</a></td></tr>
+<tr><td ><a href="#c6">Chapter 6. Restructuring Results with XSLT</a></td></tr>
+<tr><td ><a href="#c7">Chapter 7. Tomcat, JSP, and WebDAV</a></td></tr>
+<tr><td ><a href="#c8">Chapter 8. WebDAV Client to Database via XML</a></td></tr>
+<tr><td ><a href="#c9">Chapter 9. Axis and WSDL</a></td></tr>
+<tr><td ><a href="#refs">References</a></td></tr>
+</table>
+
+<table border="1">
+<tr><td colspan="2"><a name="c1">Chapter 1. The First Service</a></td></tr>
+<tr><td>Figure 1-3</td><td><a href="googleShare_1/frameTop.html">** googleShare demo</a></td></tr>
+<tr><td>Listing 1-1</td><td><a href="googleShare_1/frameTop.txt">googleShare top listing</a></td></tr>
+<tr><td>Listing 1-2..4</td><td><a href="googleShare_1/mindShare.txt">googleShare control listing</a></td></tr>
+<tr><td>Listing 1-5</td><td><a href="utils/getDOMdata.txt">gsGetCount listing is in getDOMdata.js </a></td></tr>
+<tr><td>Listing 1-7</td><td><a href="utils/xmlhttp.txt">doGoogle listing is in xmlhttp.js </a></td></tr>
+<tr><td>Listing 1-8</td><td><a href="utils/xmlhttp.txt">displayXML listing is in xmlhttp.js </a></td></tr>
+<tr><td>Listing 1-9</td><td><a href="utils/xmlhttp.txt">parseXML listing is in xmlhttp.js </a></td></tr>
+<tr><td>Figure 1-4</td><td><a href="xmlhttp/xmlhttpFrameTop.html">** 3-way google demo</a></td></tr>
+<tr><td>Listing 1-10..12</td><td><a href="xmlhttp/xmlhttpFrameCtl.txt">3-way google xmlhttp listing </a></td></tr>
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+
+<table border="1">
+<tr><td colspan="2"><a name="c2">Chapter 2. The Plumbing: DOM and SOAP</a></td></tr>
+<tr><td>Listing 2-2..3</td><td><a href="utils/getDOMdata.txt">getMessageData listing is in getDOMdata.js </a></td></tr>
+<tr><td>Listing 2-4</td><td><a href="utils/xmlhttp.txt">xml2HtmlPage listing is in xmlhttp.js </a></td></tr>
+<tr><td>Listing 2-5</td><td><a href="utils/xmlhttp.txt">xml2Html listing is in xmlhttp.js </a></td></tr>
+<tr><td>Listing 2-6</td><td><a href="utils/xmlhttp.txt">related listings in xmlhttp.js </a></td></tr>
+<tr><td>Listing 2-7</td><td><a href="utils/xmlhttp.txt">parseXML listing (1-9) is in xmlhttp.js </a></td></tr>
+<tr><td>Listing 2-8</td><td><a href="utils/xmlhttp.txt">toXML listing is in xmlhttp.js </a></td></tr>
+<tr><td colspan="2">Remaining listings are output from 
+ <a href="xmlhttp/xmlhttpFrameTop.html">** 3-way google demo</a>, or off-line references</td></tr>
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+
+<table border="1">
+<tr><td colspan="2"><a name="c3">Chapter 3. More Services, Java Applet</a></td></tr>
+<tr><td>Figure 3-1</td><td><a href="weather/xmlhttpWeatherTop.html">** weather demo</a></td></tr>
+<tr><td>Listing 3-1</td><td><a href="weather/xmlhttpWeatherCtl.txt">weather page listing  </a></td></tr>
+<tr><td>Listing 3-2..3</td><td><a href="utils/xmlhttp.txt">weather utilities listing in xmlhttp.js </a></td></tr>
+<tr><td>Figure 3-2</td><td><a href="amazon/xmlhttpAmaKeywordTop.html">** amazon demo</a></td></tr>
+<tr><td>Listing 3-4..5</td><td><a href="amazon/xmlhttpAmaKeywordCtl.txt">amazon page listing  </a></td></tr>
+<tr><td>Listing 3-6</td><td><a href="amazon/xmlhttpAmaKeywordTop.html">sample SOAP response from demo </a></td></tr>
+<tr><td>Figure 3-3</td><td><a href="amazon/xmlhttpAmaKeyTableTop.html">** amazon demo, table output</a></td></tr>
+<tr><td>Listing 3-7..10</td><td><a href="amazon/xmlhttpAmaKeyTableCtl.txt">table output listing </a></td></tr>
+<tr><td>Listing 3-11..12</td><td><a href="utils/getDOMdata.txt">getMessageData listings in getDOMdata.js </a></td></tr>
+<tr><td>Figure 3-4</td><td><a href="amazon/xmlhttpAmazonMultiTop.html">** amazon demo, multiple queries</a></td></tr>
+<tr><td>Listing 3-13</td><td><a href="amazon/xmlhttpAmazonMultiCtl.txt">amazon multi page listing  </a></td></tr>
+<tr><td>Listing 3-14</td><td><a href="utils/AmazonEnvelopes.txt">amazon utilities listing in AmazonEnvelopes.js </a></td></tr>
+<tr><td>Listing 3-15..20</td><td><a href="XmlHttp_java.txt">listing of soapUtil.XmlHttp Java class </a></td></tr>
+<tr><td>Listing 3-21</td><td><a href="AmazonApplet_1_java.txt">listing of soapUtil.AmazonApplet_1 Java class </a></td></tr>
+<tr><td>Listing 3-22</td><td><a href="AmazonApplet_2_java.txt">listing of soapUtil.AmazonApplet_2 Java class </a></td></tr>
+<tr><td>Figure 3-5</td><td><a href="amazon/appletAmaKeyword1Top.html">** AmazonApplet_1 demo</a></td></tr>
+<tr><td>Listing 3-23</td><td><a href="amazon/appletAmaKeyword1Ctl.txt">applet page listing </a></td></tr>
+<tr><td>Listing 3-24</td><td><a href="AmazonApplet_3_java.txt">AmazonApplet_3 page listing </a></td></tr>
+<tr><td>Listing 3-25</td><td><a href="SoapApplet_java.txt">SoapApplet listing </a></td></tr>
+<tr><td>Figure 3-6</td><td><a href="amazon/multiserviceAppletTop.html">** multiservice applet demo</a></td></tr>
+<tr><td>Listing 3-26..27</td><td><a href="amazon/multiserviceAppletCtl.txt">applet page listing </a></td></tr>
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+
+<table border="1">
+<tr><td colspan="2"><a name="c4">Chapter 4. DBService and a Book Club</a></td></tr>
+
+
+<tr><td>Figure 4-1</td><td><a href="DBService/BookClubReviewer.html">** BookClub</a></td></tr>
+<tr><td>Listing 4-1..16,21..</td><td><a href="DBService/DBService_java.txt">DBService.java listing</a></td></tr>
+<tr><td>other listings, Fig 4.5</td><td><a href="DBService/DBServiceConfig.xml">DBServiceConfig.xml</a></td></tr>
+<tr><td> </td><td><a href="DBService/DBQueryData_java.txt">DBQueryData.java listing</a></td></tr>
+
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+
+<table border="1">
+<tr><td colspan="2"><a name="c5">Chapter 5. Authentication and REST</a></td></tr>
+<tr><td>Figure 5-1..5-3</td><td><a href="DBService/BookClubAuthReviewer.html">** BookClubAuth</a></td></tr>
+
+<tr><td>Listing 5-1..6,11..</td><td><a href="DBService/DBAuthService_java.txt">DBAuthService.java listing</a></td></tr>
+<tr><td>Listing 5-8</td><td><a href="DBService/DBAuthServiceConfig.xml">DBAuthServiceConfig.xml</a></td></tr>
+<tr><td>Listing 5-9..10</td><td><a href="DBService/DBAuthQueryData_java.txt">DBAuthQueryData.java listing</a></td></tr>
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+
+<table border="1">
+<tr><td colspan="2"><a name="c6">Chapter 6. Restructuring Results with XSLT</a></td></tr>
+<tr><td>Figure 6-1</td><td><a href="http://www.n-topus.com/xslt/amaGETxsl.html">** amaGETxsl.html/amaGET01.xsl</a></td></tr>
+<tr><td>Figure 6-2</td><td><a href="http://www.n-topus.com/xslt/amaGETxsl.html">** same, use: amaGET02.xsl</a></td></tr>
+<tr><td>Listing 6-1</td><td><a href="xslt/hello.xml">hello.xml</a></td></tr>
+<tr><td>Listing 6-2</td><td><a href="xslt/updat01.xml">input: updat01.xml </a>(use View/Source)</td></tr>
+<tr><td>Listing 6-3</td><td><a href="xslt/upOut01.htm">output: upOut01.htm</a></td></tr>
+<tr><td>Listing 6-4..5</td><td><a href="xslt/updateCount01.xsl">stylesheet: updateCount01.xsl</a></td></tr>
+<tr><td>Listing 6-6</td><td><a href="xslt/updateCount02.xsl">stylesheet: updateCount02.xsl</a></td></tr>
+<tr><td>Listing 6-7</td><td><a href="xslt/upOut01.htm">(discussion of output)</a></td></tr>
+<tr><td>Listing 6-8</td><td><a href="xslt/updateCount05.xsl">stylesheet: updateCount05.xsl</a></td></tr>
+<tr><td>Listing 6-9..10</td><td><a href="xslt/amaGETxsl.html">amaGETxsl.html</a></td></tr>
+<tr><td>Listing 6-11</td><td><a href="xslt/amaGETout.xml">sample Amazon output(pruned; View/Source)</a></td></tr>
+<tr><td>Listing 6-12..14</td><td><a href="xslt/amaGET01.xsl">amaGET01.xsl</a><a href="xslt/amaGET02.xsl">amaGET02.xsl</a></td></tr>
+<tr><td>Listing 6-15</td><td><a href="xslt/amaGET03.xsl">amaGET03.xsl</a></td></tr>
+<tr><td>Figure 6-6</td><td><a href="http://localhost:65432/ProdRevs/0393011836?xslt=ProdRevs.xsl">http://localhost:65432/ProdRevs/0393011836?xslt=ProdRevs.xsl</a></td></tr>
+<tr><td>Listing 6-16..22</td><td><a href="xslt/ProdRevs.xsl">ProdRevs.xsl</a></td></tr>
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+
+<table border="1">
+<tr><td colspan="2"><a name="c7">Chapter 7. Tomcat, JSP, and WebDAV</a></td></tr>
+<tr><td>Figure 7-3</td><td><a href="testJSP.jsp">testJSP.jsp</a>   </td></tr>
+<tr><td>Listing 7-1..7-3</td><td><a href="testJSP_jsp.txt">listing for testJSP.jsp</a></td></tr>
+<tr><td>Listing 7-4</td><td><a href="testJSP_jsp_java.txt">generated class testJSP_jsp.java</a></td></tr>
+<tr><td>Figure 7-4..7-5</td><td><a href="webdav/googleREST.html">webdav/googleREST.html</a>   </td></tr>
+<tr><td>Listing 7-5..7-6</td><td><a href="webdav/googleREST_html.txt">listing for googleREST</a></td></tr>
+<tr><td>Listing 7-7..7-9</td><td><a href="SOAPxslt_jsp.txt">listing for SOAPxslt.jsp</a></td></tr>
+<tr><td>Listing 7-12..7-15</td><td><a href="webdav/googleSearch_xsl.txt">listing for googleSearch.xsl</a></td></tr>
+<tr><td>Listing 7-16..7-18</td><td><a href="webdav/webdav_distrib_web_xml.txt">listing for webdav's web.xml</a></td></tr>
+<tr><td>Listing 7-19</td><td><a href="oxdav/oxdav_web_xml.txt">listing for oxdav's web.xml</a></td></tr>
+<tr><td>Listing 7-20..7-23</td><td><a href="oxdav/TidyFilter_java.txt">../oxdav/WEB-INF/classes/webdavFilters/tidyFilter.java</a></td></tr>
+<tr><td>Listing 7-24</td><td><a href="oxdav/Tidy_cfg.txt">../oxdav/TIDY/tidy.cfg</a></td></tr>
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+<table border="1">
+<tr><td colspan="2"><a name="c8">Chapter 8. WebDAV Client to Database via XML</a></td></tr>
+
+<tr><td>Listing 8-1</td><td><a href="oxdav/hierarchy_html.txt">listing for hierarchy.html</a></td></tr>
+<tr><td>Listing 8-2</td><td><a href="oxdav/res_hierarchy_html.txt">Tidy output hierarchy.html listing</a></td></tr>
+
+<tr><td>Figure 8-1</td><td><a href="http://localhost:8080/oxdav/res/hierarchy.html">http://localhost:8080/oxdav/res/hierarchy.html</a>   </td></tr>
+<tr><td>Listing 8-3</td><td><a href="oxdav/xslt_hierarchy_html.txt">XSLT output hierarchy.html listing</a></td></tr>
+<tr><td>Listing 8-4..8-5</td><td><a href="oxdav/XSLTFilter_java.txt">../oxdav/WEB-INF/classes/webdavFilters/XSLTFilter.java listing</a></td></tr>
+<tr><td>Listing 8-6..8-15</td><td><a href="oxdav/hierdiv_xsl.txt">../oxdav/openXML/CODE/hierdiv.xsl listing</a></td></tr>
+<tr><td>Figure 8-3..8-5</td><td><a href="http://localhost:8080/oxdav">http://localhost:8080/oxdav</a>   </td></tr>
+<tr><td>Listing 8-16..8-18</td><td><a href="oxdav/DBFilter_java.txt">../oxdav/WEB-INF/classes/webdavFilters/DBFilter.java listing</a></td></tr>
+<tr><td>Listing 8-19</td><td><a href="oxdav/openXMLhelp_htm.txt">listing for openXMLhelp.htm</a></td></tr>
+<tr><td>Listing 8-20</td><td><a href="oxdav/res_openXMLhelp_htm.txt">listing for transformed openXMLhelp.htm</a></td></tr>
+<tr><td>Listing 8-21..8-22</td><td><a href="oxdav/DBFilter_java.txt">concluding DBFilter.java listings</a></td></tr>
+
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+<table border="1">
+<tr><td colspan="2"><a name="c9">Chapter 9. Axis and WSDL</a></td></tr>
+<tr><td>Listing 9-1</td><td><a href="axis/Factorial.java">wsbk/axis/Factorial.java</a></td></tr>
+<tr><td colspan="2">wsbk/axis/Factorial.java file is copied to webapps/axis/Factorial.jws</td></tr>
+<tr><td>Figure 9-1</td><td><a href="http://localhost:8080/axis/Factorial.jws?WSDL"> http://localhost:8080/axis/Factorial.jws?WSDL</a>   </td></tr>
+<tr><td>Listing 9-2</td><td>part of Figure 9-1</td></tr>
+<tr><td>Listing 9-3</td><td>wsbk/axis/makeFactorialFromWSDL.bat</td></tr>
+<tr><td>Listing 9-4</td><td><a href="axis/localhost/axis/Factorial_jws/Factorial.java">generated wsbk/axis/localhost/axis/Factorial_jws/Factorial.java</a></td></tr>
+<tr><td>Listing 9-5</td><td>part of Figure 9-1</td></tr>
+<tr><td>Listing 9-6</td><td><a href="axis/FactorialClient.java">FactorialClient.java</a></td></tr>
+<tr><td>Listing 9-7</td><td>error message: edit wsbk/axis/runFactorial.bat to produce it</td></tr>
+<tr><td>Figure 9-2</td><td>run webapps/wsbk/tcpmon.bat</td></tr>
+<tr><td>Listing 9-8..9-11</td><td>run tcpmon.bat and edit+run runFactorial.bat</td></tr>
+<tr><td>Listing 9-12..9-14</td><td>more of Figure 9-1</td></tr>
+<tr><td>Listing 9-15..9-16</td><td><a href="axis/w3stockquote.wsdl">wsbk/axis/w3stockquote.wsdl</a></td></tr>
+<tr><td>Listing 9-17..9-18</td><td><a href="axis/StockQuoteClient.java">StockQuoteClient.java</a> to use <a href="axis/com/example/stockquote_wsdl/StockQuoteService.java">StockQuoteService.java</a></td></tr>
+<tr><td>Listing 9-19</td><td><a href="axis/com/example/stockquote_wsdl/undeploy.wsdd">undeploy.wsdd</a></td></tr>
+<tr><td>Listing 9-20..9-22</td><td><a href="axis/com/example/stockquote_wsdl/deploy.wsdd">deploy.wsdd</a></td></tr>
+<tr><td>Listing 9-23</td><td>deployStockService.bat, then tcpmon.bat and runStockQuote.bat</td></tr>
+<tr><td>Listing 9-24</td><td><a href="axis/StockQuoteClient.html">StockQuoteClient.html; view/source</a></td></tr>
+<tr><td>Listing 9-25</td><td>runStockQuote.bat or StockQuoteClient.html</td></tr>
+<tr><td>Listing 9-26..9-31</td><td><a href="axis/updateCount.wsdl">updateCount.wsdl</a></td></tr>
+<tr><td>Listing 9-32</td><td><a href="axis/com/n_topus/DBS/_doSQLRequest.java">_doSQLRequest.java</a> generated code</td></tr>
+<tr><td>Listing 9-33</td><td>within <a href="axis/updateCount.wsdl">updateCount.wsdl</a></td></tr>
+<tr><td>Listing 9-34..9-37</td><td><a href="axis/UpdateCountClient.java">UpdateCountClient.java</a></td></tr>
+<tr><td>Listing 9-38</td><td>within <a href="axis/resultSet.wsdl">resultSet.wsdl</a></td></tr>
+<tr><td>Listing 9-39..9-41</td><td><a href="axis/com/n_topus/DBS_RS/_doSQLResponse_table_tr.java">com/n_topus/DBS_RS/_doSQLResponse_table_tr.java</a></td></tr>
+<tr><td>Listing 9-42..9-43</td><td><a href="axis/ResultSetClient.java">ResultSetClient.java</a></td></tr>
+<tr><td>Listing 9-4..9-46</td><td>use wsbk/tcpmon.bat, wsbk/WEB-INF/classes/soapUtil/DBAuthService.bat, and runResultSet.bat</td></tr>
+<tr><td ><a href="#chapList">Chapter Listing</a></td></tr>
+</table>
+
+<p>
+<a href="xmlhttp/xmlhttpFrameTop.html">xmlhttpFrameTop google demonstration</a>
+just shows the elements of a Google SOAP call/result, with all three calls
+demonstrated and their XML input and output placed in frames.
+</p><p><a href="googleShare_1/frameTop.html">googleShare</a> uses the search
+call to find a "mindShare", or "googleShare", value. This is an idea created
+by <a
+ href="http://www.stevenberlinjohnson.com/movabletype/archives/000011.html">
+Steven Berlin Johnson</a> and implemented in many ways and many languages.
+The idea is simply that if you count the number of occurrences of 
+"relativity" on the web with Google, and then count the number of occurrences 
+of "Einstein relativity" (i.e., pages where both terms occur), you have a
+crude measure of how far the discussion of relativity is "penetrated" by 
+discussion, or at least mention, of Einstein. This is Einstein's mindshare
+of relativity. If relativity is never mentioned without Einstein, then the 
+googleShare value will be 100%; if Einstein is never mentioned in the 
+context of relativity, the googleShare value will be 0%. 
+</p>
+<p>
+Exactly the same code can then be used to get a sense of how specialized
+the "Einstein" term is to relativity: in effect, relativity's mindshare
+of Einstein. Some will find this obvious, others will find that it is
+a very strange but useful contortion: just swap the "who" and "what".
+</p>
+<p>
+The <a href="base64/FrameTop.html">base64</a> demo shows the retrieval
+of a page from Google's cache. These pages are returned in base64
+encoding, which is briefly explained and illustrated at
+<a href="base64/b64.htm">base64</a>
+</p>
+<p>
+The <a href="weather/xmlhttpWeatherTop.html">weather/xmlhttpWeatherTop.html</a> 
+demo shows weather reporting using the same Javascript technique as we 
+used for Google, very slightly generalized. (At the moment, weather reporting
+is available for some codes for some airports. For example, looking up "Atlanta"
+finds various possible codes; "KPDK" works.)
+The <a href="amazon/xmlhttpAmaKeywordTop.html">amazon/xmlhttpAmaKeywordTop.html</a> 
+demo does it for Amazon's keyword search, again in the same way, while
+<a href="amazon/xmlhttpAmazonMultiTop.html">amazon/xmlhttpAmazonMultiTop.html</a> 
+puts a large group of Amazon services onto a page. As another kind of extension,
+we show in <a href="amazon/xmlhttpAmaKeyTableTop.html">amazon/xmlhttpAmaKeyTableTop.html</a>
+how to put the output into a table of cover-page images, links, and straight data
+extracted from the XML.
+</p><p>
+Having generalized the Javascript, we produce Chapter 3's Java applet-based
+examples, beginning with the somewhat-specialized 
+<a href="amazon/appletAmaKeyword1Top.html">amazon/appletAmaKeyword1Top.html</a> 
+which generalizes easily to
+<a href="amazon/appletAmaKeywordTop.html">amazon/appletAmaKeywordTop.html</a> 
+The <a href="weather/appletWeatherTop.html">weather/appletWeatherTop.html</a> 
+demo shows weather reporting using the same  technique, and 
+ <a href="amazon/multiserviceAppletTop.html">amazon/multiserviceAppletTop.html</a> 
+combines three services on the same page, using the same applet.
+</p>
+<br/>
+<H1><a name="refs"></a>miscellaneous referencess</H1>
+<table>
+<tr><td><a href="http://java.sun.com/j2se/1.4.1/docs/api/index.html">Sun javadoc for JDK1.4.1</a></td></tr>
+
+<tr><td><a href="http://www.w3.org/TR/SOAP/">SOAP 1.1 spec</a></td></tr>
+<tr><td><a href="http://www.w3.org/TR/soap12-part1/">SOAP 1.2 spec part 1</a></td></tr>
+<tr><td><a href="http://www.w3.org/TR/soap12-part2/">SOAP 1.2 spec part 2</a></td></tr>
+<tr><td><a href="http://www.w3.org/TR/2001/NOTE-wsdl-20010315">WSDL spec</a></td></tr>
+<tr><td><a href="http://www.xmethods.com/">xmethods -- miscellaneous services</a></td></tr>
+
+<tr><td><a href="../tomcat-docs/index.html">tomcat docs</a></td></tr>
+<tr><td><a href="http://ws.apache.org/axis/faq.html">axis faq</a></td></tr>
+<tr><td><a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/xml-axis/java/docs/user-guide.html">axis user guide</a></td></tr>
+
+<tr><td><a href="http://www.intertwingly.net/stories/2002/07/20/restSoap.html">http://www.intertwingly.net/stories/2002/07/20/restSoap.html</a></td></tr>
+<tr><td><a href="http://www.prescod.net/">http://www.prescod.net/</a></td></tr>
+<tr><td><a href="http://www.xml.com/pub/a/2002/06/19/rng-compact.html">http://www.xml.com/pub/a/2002/06/19/rng-compact.html</a></td></tr>
+<tr><td><a href="http://intertwingly.net/wiki/pie/">http://intertwingly.net/wiki/pie/</a></td></tr>
+<tr><td><a href="http://www.itworld.com/nl/xml_prac/04182002/pf_index.html">http://www.itworld.com/nl/xml_prac/04182002/pf_index.html</a></td></tr>
+
+<tr><td><a href="http://intertwingly.net/stories/2002/12/17/aBusyDevelopersGuideToWsdl11PartIii.html">http://intertwingly.net/stories/2002/12/17/aBusyDevelopersGuideToWsdl11PartIii.html</a></td></tr>
+</table>
+</body></html>

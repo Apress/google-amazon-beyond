@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Google Calculations</title>
+<script src="../utils/key.js">/* var key = google key */</script>
+<script type="text/javascript">
+var myKey = key;
+</script>
+<script type="text/javascript">
+
+function GoogleSearcher(key){this.init(key);}
+
+function gs_init(key){
+  this.key=key;
+  this.soapVersion = 0;
+  this.soapMethod = "doGoogleSearch";
+  this.soapURN = "urn:GoogleSearch";
+}
+GoogleSearcher.prototype.init=gs_init;
+
+
+// a soapParameter can be integer or boolean or string; we want to allow
+// param("maxResults","5","integer") to be the same as param("maxResults",5,"integer")
+
+function param(pName,pVal,pType){
+  if(pType=="boolean")
+   return new SOAPParameter(((""+pVal)=="true"?true:false),pName);
+  if(pType=="integer")
+   return new SOAPParameter(parseInt(""+pVal),pName);
+  return new SOAPParameter(pVal,pName);
+}
+
+function gs_search(qStr,startIndex,maxResults){
+alert("searching for "+qStr);
+  var soapCall=new SOAPCall();  
+  var soapHeaders=[];
+  var params = [
+    param("key",this.key),
+    param("q",qStr),
+    param("start",startIndex,"integer"),
+    param("maxResults",maxResults,"integer"),
+    param("filter","true","boolean"),      // hide similar pages
+    param("restrict",""),                  // no general restrictions
+    param("safeSearch","false","boolean"), // don't exclude adult content
+    param("lr",""),                        // no language restrictions
+    param("ie","utf8"),                    // use UTF8 character encoding
+    param("oe","utf8")
+    ];
+  soapCall.encode(this.soapVersion,this.soapMethod,this.soapURN,
+                  soapHeaders.length,soapHeaders,params.length,params);
+  soapCall.transportURI = "http://api.google.com/search/beta2";
+  document.theForm.theCall.value=toXML(soapCall.message);
+try{
+  netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+  var soapResponse = soapCall.invoke();
+}catch(ex){return alert("failure to get soapResponse:"+ex);}
+  if(soapResponse.fault){
+     alert(soapResponse.fault);
+     return {msg: "SOAP error", fault: soapResponse.fault};
+    }
+  document.theForm.theResponse.value=toXML(soapResponse.body);
+  return soapResponse.message;
+  }
+GoogleSearcher.prototype.search=gs_search;
+
+
+function getMessageData(msg,name){
+  try{
+    return msg.getElementsByTagName(name)[0].childNodes[0].data;
+  }catch(ex){alert("no field "+name+" in "+toXML(msg)+"\n"+ex);}
+  return "";
+}
+
+function toXML(x){
+  if(!toXML.serializer)toXML.serializer=new XMLSerializer();
+  return toXML.serializer.serializeToString(x);
+}
+
+</script>
+<script type="text/javascript">
+
+function x(){alert(GoogleSearcher);}
+
+function gsGetCount(q){
+alert("gsGetCount("+q+")");
+  if(!this.countCache)this.countCache=new Object();
+  var cStr=this.countCache[q];
+  if(cStr)return parseInt(cStr);
+  var msg=this.search(q,0,1);
+  try{ 
+    var data=getMessageData(msg,"estimatedTotalResultsCount");
+    return parseInt(this.countCache[q]=data);
+  }catch(ex){alert (ex+"\n"+toXML(msg));}
+  return 0;
+}
+GoogleSearcher.prototype.getCount=gsGetCount;
+var gsCounter = new GoogleSearcher(myKey);
+
+function findMindShare(who,what){
+//  var whoNum=gsCounter.getCount(who);
+  var whatNum=gsCounter.getCount(what);
+  var whoWhatNum=gsCounter.getCount(who+" "+what);
+  return makePercent(whoWhatNum / whatNum);
+}
+function makePercent(num){ // e.g., .0010 becomes .10; 
+ return num*100; // later worry about making it pretty.
+}  
+function g(q){alert(gsCounter.getCount(q));}
+</script>
+<link rel="stylesheet" type="text/css" href="google.css">
+</head>
+<body>
+
+<h3>Google Calculations </h3>
+<p>mindShare = WhoWhatCount/(whoCount+whatCount); = 100% if the "what" is always associated
+with the "who", 0% if it never is.</p>
+<div style="float: right"><a href="http://www.google.com/apis/"><img src="http://www.google.com/logos/powered_by_google_135x35.gif" width="135" height="35" alt="Powered by Google Web APIs"></a></div>
+
+<form name="theForm" action="javascript:void">
+<div>
+who: <input type="text" name="who" value="myers nakhimovsky">
+what: <input type="text" name="what" value="java xml">
+mindshare: <input type="text" name="mindshare"/>
+<input type="button"  onclick="with(this.form){mindshare.value=findMindShare(who.value,what.value);}" value="findMindShare">
+</div>
+
+
+<textarea name="theCall" rows="11" cols="100">
+</textarea>
+<textarea name="theResponse" rows="15" cols="100">
+</textarea>
+</form>
+
+<div id="resultDiv" style="margin-top:1em;">
+</div>
+
+</body>
+</html>

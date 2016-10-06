@@ -1,0 +1,53 @@
+<html><head><title>jsFactorialClient.html</title>
+<script src="../utils/xmlhttp.js"></script>
+<script src="../utils/getDOMdata.js"></script>
+<script>
+function doFactorialEnvelope(N){
+ showCallRequest=false; showCallResponse=false;
+ var S='<?xml version="1.0" encoding="UTF-8"?>';
+ S+='<soapenv:Envelope';
+ S+='   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"';
+ S+='   xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+ S+='   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> ';
+ S+=' <soapenv:Body>  ';
+ S+='    <ns1:factorial';
+ S+='      soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"';
+ S+='      xmlns:ns1="http://DefaultNamespace">   ';
+ S+='      <N xsi:type="xsd:int">'+N+'</N>  ';
+ S+='    </ns1:factorial> ';
+ S+=' </soapenv:Body>';
+ S+='</soapenv:Envelope>';
+ return S;
+}
+function doFactorial(N){
+  alert("doFactorial("+N+")");
+  var msg= doSoapCall("http://localhost:8080/axis/Factorial.jws",
+                    "''",
+                  doFactorialEnvelope(N));
+  var resp=getMessageDataDefault(msg,"factorialReturn","NoReturn");
+  if(resp!="NoReturn")return resp;
+  alert("no factorialReturn");
+  resp=getMessageDataDefault(msg,"ns1:factorialReturn",resp);
+  if(resp!="NoReturn")return resp;
+  alert("no ns1:factorialReturn");
+    if(!inIE)
+      netscape.security.PrivilegeManager.
+        enablePrivilege("UniversalBrowserRead");
+
+  resp=toXML(msg);
+  return resp;
+}
+function doFactorialForm(frm){
+  document.getElementById("resultDiv").innerHTML=doFactorial(frm.N.value);
+}
+ 
+</script>
+</head>
+<body>
+<form name="factForm" action="javascript:doFactorialForm(document.factForm)">
+N:<input type="text" name="N" value="10"/>
+<input type="submit" value="getFactorial"/>
+</form>
+<div id="resultDiv">Result Goes Here</div>
+
+</body></html>

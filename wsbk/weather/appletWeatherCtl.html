@@ -1,0 +1,67 @@
+<html><head><title>appletWeatherCtl.html</title>
+<applet name="XmlHttp" height="2" width="2" code="soapUtil/SoapApplet.class" >
+</applet>
+</head><body>
+<script src="../utils/xmlhttp.js">/* just for parseXML and xml2Html */ </script>
+<script>
+  function airportCode(){
+    var ur='http://www.ar-group.com/Airport-Locator.asp?RequestCity=';
+    return ur+document.theForm.cityName.value;
+   }
+
+/* weather report via http://www.capescience.com/webservices/globalweather/index.shtml */
+
+function doGetWeatherReportEnvelope(code){ // copied from xmlhttp.js, for clarity 
+  var S='<?xml version="1.0" encoding="UTF-8"?>\n';
+  S+='<SOAP-ENV:Envelope';
+  S+='    SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"';
+  S+='    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"';
+  S+='    xmlns:ns0="capeconnect:GlobalWeather:GlobalWeather"';
+  S+='    xmlns:xsd="http://www.w3.org/2001/XMLSchema"';
+  S+='    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+  S+='    <SOAP-ENV:Body>';
+  S+='        <ns0:getWeatherReport>';
+  S+='            <code xsi:type="xsd:string">' +code+ '</code>';
+  S+='        </ns0:getWeatherReport>';
+  S+='    </SOAP-ENV:Body>';
+  S+='</SOAP-ENV:Envelope>';  
+  return S;
+}
+/* The following doGetWeatherReport function is left for comparison. 
+function doGetWeatherReport(code){
+//This is the Javascript version from ../utils/xmlhttp.js, which uses the browser's
+// permission; we  replace this the Java applet call which has its own permission
+// because its code resides in the Java implementation's lib/ext directory.
+  alert("dogetweatherreport("+code+")");
+  return doSoapCall("http://live.capescience.com/ccx/GlobalWeather",
+                    "capeconnect:GlobalWeather:GlobalWeather#getWeatherReport",
+                  doGetWeatherReportEnvelope(code));
+}
+*/
+
+function doGetWeatherReport(code){ // here is the applet version
+  alert("dogetweatherreport("+code+")");
+  var res=document.XmlHttp.sendSoap(
+            "http://live.capescience.com/ccx/GlobalWeather",
+            "capeconnect:GlobalWeather:GlobalWeather#getWeatherReport",
+            doGetWeatherReportEnvelope(code)
+            );
+  var ob=parseXML(res);
+  res=xml2Html(ob);
+  with(parent.dataFrame)
+    {document.write(res);document.close();}
+}  
+</script>
+This is a cross-browser invocation of capescience.com's weather service.
+You will see the response, but not the call.
+<form name="theForm" action="javascript:void">
+  City:<input type="text" name="cityName" value="Syracuse"/>
+  <a href="javascript:parent.location=airportCode()">lookup code for city</a>, then put in
+  Airport code:<input type="text" name="airportCode" value="SYR"/>
+
+<input type="button" value="getWeather" 
+  onclick="with(this.form){doGetWeatherReport(airportCode.value);}"/>
+
+</form>
+</body></html>

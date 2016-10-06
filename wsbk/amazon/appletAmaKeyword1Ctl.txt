@@ -1,0 +1,33 @@
+........................................................................
+........................................................................
+........................................................................
+........................................................................
+<html><head><title>appletAmaKeyword1Ctl.html</title>
+<applet name="XmlHttp" height="2" width="2" code="soapUtil/AmazonApplet_1.class" >
+</applet>
+
+</head><body>
+<script src="../utils/key.js"></script>
+<script src="../utils/xmlhttp.js"></script>
+<script>
+function doAmazonKeywordSearch(token,keyword){
+   alert("dks("+token+","+keyword+")");
+  var res=document.XmlHttp.doAmazonKeywordSearch(token,keyword);
+  var ob=parseXML(res);
+  res=xml2Html(ob);
+  with(parent.dataFrame)
+    {document.write(res);document.close();}
+}
+</script>
+This is an applet-based cross-browser invocation of amazon's keyword search.
+You will see the response,but not the call. The response-formatting is
+done in Javascript, because our Java usage is not actually using any DOM at
+all: we simply send a string to Amazon, and get a string back.
+<form name="theForm" action="javascript:void">
+  keyword:<input type="text" name="keyword" value='"Harry Potter"'/>
+<input type="button" value="getSearch" 
+  onclick="doAmazonKeywordSearch(amazonToken,this.form.keyword.value);"/>
+<input type="button" value="version" 
+  onclick="with(this.form){alert(document.XmlHttp.version());}"/>
+</form>
+</body></html>
